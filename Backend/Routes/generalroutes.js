@@ -11,4 +11,14 @@ Router.post('/signup', async (req, res) => {
   return value;
 });
 
+Router.post('/login', async (req, res) => {
+  
+  
+});
+Router.post('/logout', async (req, res) => {
+  
+  
+});
+
+
 module.exports = Router;
