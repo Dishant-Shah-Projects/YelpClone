@@ -8,6 +8,7 @@ const orderSchema = new mongoose.Schema({
   restaurantName: { type: String, required: true },
   OrderType: { type: String, required: true },
   OrderStatus: { type: String, required: true },
+  OrderDateTime: { type: Date, required: true },
   Items: [
     {
       ItemID: {

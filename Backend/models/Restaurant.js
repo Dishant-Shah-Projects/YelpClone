@@ -13,6 +13,8 @@ const restaurantSchema = new mongoose.Schema({
   Lat: { type: Number },
   Long: { type: Number },
   Cusine: { type: String },
+  Hours: { type: String },
+  Description: { type: String },
   Menu: [
     {
       ItemID: {
@@ -29,7 +31,7 @@ const restaurantSchema = new mongoose.Schema({
   Reviews: [
     {
       DatePosted: { type: Date },
-      Review: { type: Number },
+      Review: { type: String },
       Rating: { type: Number },
       customerID: { type: String },
       customerName: { type: String },

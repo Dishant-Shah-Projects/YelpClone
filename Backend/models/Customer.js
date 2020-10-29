@@ -2,7 +2,7 @@ const mongoose = require('mongoose');
 
 const customerSchema = new mongoose.Schema({
   customerID: { type: Number, required: true },
-  UserName: { type: String , required: true},
+  UserName: { type: String, required: true },
   Name: { type: String },
   ProfilePicURL: { type: String },
   Email: { type: String },
@@ -17,6 +17,14 @@ const customerSchema = new mongoose.Schema({
   Country: { type: String },
   Nickname: { type: String },
   Headline: { type: String },
+  PeopleFollowed: [
+    {
+      CustomerID: {
+        type: Number,
+      },
+      CustomerName: { type: String },
+    },
+  ],
 
 });
 

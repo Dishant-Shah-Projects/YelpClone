@@ -1,6 +1,10 @@
+/* eslint-disable no-unused-vars */
+/* eslint-disable no-console */
 /* eslint-disable object-shorthand */
 const bcrypt = require('bcrypt');
+const jwt = require('jsonwebtoken');
 const { secret } = require('../config');
+
 const Customer = require('../models/Customer');
 const Restaurant = require('../models/Restaurant');
 const order = require('../models/order');
@@ -16,7 +20,7 @@ const userSignup = async (req, res) => {
     console.log(req.body);
     if (Role === 'Restaurant') {
       const restaurant = new Restaurant({
-        restaurantID: 13,
+        restaurantID: 5,
         UserName: UserName,
         Name: Name,
         Password: Password,
@@ -68,7 +72,72 @@ const userSignup = async (req, res) => {
 
   return res;
 };
+const userLogin = async (req, res) => {
+  try {
+    const {
+      UserName, Password, Role,
+    } = req.body;
+    console.log(req.body);
+    if (Role === 'Restaurant') {
+      Restaurant.findOne({ UserName }, (e, data) => {
+        if (e) {
+          console.log(e);
+          res.writeHead(500, {
+            'Content-Type': 'text/plain',
+          });
+          res.end('Incorrecct Credentials');
+        } else if (data.Password === Password) {
+          const payload = { rol: Role, Name: UserName, ID: data.restaurantID };
+          const accesstoken = jwt.sign(payload, secret, {
+            expiresIn: 1008000,
+          });
+          res.status(200).end(JSON.stringify(`JWT ${accesstoken}`));
+        } else {
+          res.writeHead(400, {
+            'Content-Type': 'text/plain',
+          });
+          res.end(JSON.stringify('Incorect Password'));
+        }
+      });
+    } else {
+      Customer.findOne({ UserName }, (e, data) => {
+        if (e) {
+          console.log(e);
+          res.writeHead(500, {
+            'Content-Type': 'text/plain',
+          });
+          res.end('Incorrecct Credentials');
+        } else if (data.Password === Password) {
+          const payload = { rol: Role, Name: UserName, ID: data.customerID };
+          const accesstoken = jwt.sign(payload, secret, {
+            expiresIn: 1008000,
+          });
+          res.status(200).end(JSON.stringify(`JWT ${accesstoken}`));
+        } else {
+          res.writeHead(400, {
+            'Content-Type': 'text/plain',
+          });
+          res.end(JSON.stringify('Incorect Password'));
+        }
+      });
+    }
+  } catch {
+    res.writeHead(500, {
+      'Content-Type': 'text/plain',
+    });
+    res.end(JSON.stringify('network error'));
+  }
+
+  return res;
+};
+// To logout the user
+const userLogout = async (req, res) => {
+  req.logout();
+  res.status(200).end('Logged out');
+};
 
 module.exports = {
   userSignup,
+  userLogin,
+  userLogout,
 };
