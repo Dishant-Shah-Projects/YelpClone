@@ -3,30 +3,44 @@
 /* eslint-disable object-shorthand */
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
+const axios = require('axios');
 const { secret } = require('../config');
-
 const Customer = require('../models/Customer');
 const Restaurant = require('../models/Restaurant');
-const order = require('../models/order');
-const events = require('../models/events');
 
 // Fucntion to check if the emailID is already in use
 
 const userSignup = async (req, res) => {
   try {
     const {
-      Name, UserName, Password, Role,
+      FirstName, LastName, UserName, Password, Role, location,
     } = req.body;
     console.log(req.body);
     if (Role === 'Restaurant') {
-      const restaurant = new Restaurant({
-        restaurantID: 5,
-        UserName: UserName,
-        Name: Name,
-        Password: Password,
-
+      let lat = null;
+      let lng = null;
+      const data = await axios.get('https://maps.googleapis.com/maps/api/geocode/json', {
+        params: {
+          address: location,
+          key: 'AIzaSyBej0Pq1ieVvLjN9gq-ic0_GL81LytLEH4',
+        },
       });
-      restaurant.save((e, data) => {
+      console.log(data);
+      lat = data.data.results[0].geometry.location.lat;
+      lng = data.data.results[0].geometry.location.lng;
+      const restaurantID = await Restaurant.findOne({ $query: {}, $orderby: { restaurantID: -1 } });
+      const newID = restaurantID.restaurantID + 1;
+      const hashedPassword = await bcrypt.hash(Password, 10);
+      const restaurant = new Restaurant({
+        restaurantID: newID,
+        UserName: UserName,
+        Name: FirstName,
+        Password: hashedPassword,
+        Location: req.body.Location,
+        Lat: lat,
+        Long: lng,
+      });
+      restaurant.save((e, _data) => {
         if (e) {
           console.log(e);
           res.writeHead(500, {
@@ -41,11 +55,15 @@ const userSignup = async (req, res) => {
         }
       });
     } else {
+      const restaurantID = await Customer.findOne({ $query: {}, $orderby: { customerID: -1 } });
+      const newID = restaurantID.customerID + 1;
+      const hashedPassword = await bcrypt.hash(Password, 10);
       const custom = new Customer({
-        customerID: 23,
+        customerID: newID,
         UserName: UserName,
-        Name: Name,
-        Password: Password,
+        FirstName: FirstName,
+        LastName: LastName,
+        Password: hashedPassword,
 
       });
       custom.save((e, data) => {
@@ -79,47 +97,44 @@ const userLogin = async (req, res) => {
     } = req.body;
     console.log(req.body);
     if (Role === 'Restaurant') {
-      Restaurant.findOne({ UserName }, (e, data) => {
-        if (e) {
-          console.log(e);
-          res.writeHead(500, {
-            'Content-Type': 'text/plain',
-          });
-          res.end('Incorrecct Credentials');
-        } else if (data.Password === Password) {
-          const payload = { rol: Role, Name: UserName, ID: data.restaurantID };
-          const accesstoken = jwt.sign(payload, secret, {
-            expiresIn: 1008000,
-          });
-          res.status(200).end(JSON.stringify(`JWT ${accesstoken}`));
-        } else {
-          res.writeHead(400, {
-            'Content-Type': 'text/plain',
-          });
-          res.end(JSON.stringify('Incorect Password'));
-        }
-      });
+      const user = await Restaurant.findOne({ UserName });
+      console.log(user);
+      if ((user) && (await bcrypt.compare(Password, user.Password))) {
+        const payload = { rol: Role, Name: UserName, ID: user.restaurantID };
+        const accesstoken = jwt.sign(payload, secret, {
+          expiresIn: 1008000,
+        });
+        res.status(200).end(JSON.stringify(`JWT ${accesstoken}`));
+      } else if (user) {
+        res.writeHead(400, {
+          'Content-Type': 'text/plain',
+        });
+        res.end(JSON.stringify('Incorect Password'));
+      } else {
+        res.writeHead(500, {
+          'Content-Type': 'text/plain',
+        });
+        res.end('Incorrecct Credentials');
+      }
     } else {
-      Customer.findOne({ UserName }, (e, data) => {
-        if (e) {
-          console.log(e);
-          res.writeHead(500, {
-            'Content-Type': 'text/plain',
-          });
-          res.end('Incorrecct Credentials');
-        } else if (data.Password === Password) {
-          const payload = { rol: Role, Name: UserName, ID: data.customerID };
-          const accesstoken = jwt.sign(payload, secret, {
-            expiresIn: 1008000,
-          });
-          res.status(200).end(JSON.stringify(`JWT ${accesstoken}`));
-        } else {
-          res.writeHead(400, {
-            'Content-Type': 'text/plain',
-          });
-          res.end(JSON.stringify('Incorect Password'));
-        }
-      });
+      const user = await Customer.findOne({ UserName });
+      if ((user) && (await bcrypt.compare(Password, user.Password))) {
+        const payload = { rol: Role, Name: UserName, ID: user.customerID };
+        const accesstoken = jwt.sign(payload, secret, {
+          expiresIn: 1008000,
+        });
+        res.status(200).end(JSON.stringify(`JWT ${accesstoken}`));
+      } else if (user) {
+        res.writeHead(400, {
+          'Content-Type': 'text/plain',
+        });
+        res.end(JSON.stringify('Incorect Password'));
+      } else {
+        res.writeHead(500, {
+          'Content-Type': 'text/plain',
+        });
+        res.end('Incorrecct Credentials');
+      }
     }
   } catch {
     res.writeHead(500, {

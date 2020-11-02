@@ -29,6 +29,8 @@ const {
   getEvents,
   getOrders,
   profilePictureUpdate,
+  restaurantSearch,
+  customerSearch,
 } = require('../Functionality/customerFunctionality');
 // loadprofile
 Router.get('/profile', async (req, res) => {
@@ -41,7 +43,7 @@ Router.post('/profileUpdate', async (req, res) => {
   return value;
 });
 Router.post('/profilePicture', upload, async (req, res) => {
-  const value = await profilePictureUpdate(req,res);
+  const value = await profilePictureUpdate(req, res);
   return value;
 });
 Router.post('/profileAbout', async (req, res) => {
@@ -49,7 +51,8 @@ Router.post('/profileAbout', async (req, res) => {
   return value;
 });
 Router.post('/restaurantSearch', async (req, res) => {
-
+  const value = await restaurantSearch(req, res);
+  return value;
 });
 
 // Components for restaurant page
@@ -95,7 +98,8 @@ Router.post('/eventsregister', async (req, res) => {
   return value;
 });
 Router.post('/customerSearch', async (req, res) => {
-
+  const value = await customerSearch(req, res);
+  return value;
 });
 Router.post('/customerFollow', async (req, res) => {
   const value = await customerFollow(req, res);

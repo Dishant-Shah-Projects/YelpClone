@@ -77,8 +77,9 @@ const profileUpdate = async (req, res) => {
 const menuAdd = async (req, res) => {
   try {
     const {
-      restaurantID, DishName, Mainingredients, Description, DishIMG, DishPrice, Category,
+      restaurantID, DishName, Mainingredients, Description, DishPrice, Category,
     } = req.body;
+    const DishIMG = req.file.filename;
     const rest = await Restaurant.findOne({ restaurantID });
     const ItemID = 1 + rest.Menu.length;
     Restaurant.findOneAndUpdate(

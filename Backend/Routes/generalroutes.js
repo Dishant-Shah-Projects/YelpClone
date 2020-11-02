@@ -1,7 +1,9 @@
 const express = require('express');
 
 const Router = express.Router();
+const { auth, checkAuth } = require('../Functionality/passport');
 
+auth();
 const {
   userSignup,
   userLogin,
@@ -20,6 +22,12 @@ Router.post('/login', async (req, res) => {
 Router.post('/logout', async (req, res) => {
   const value = await (userLogout(req, res));
   return value;
+});
+Router.get('/authcheck', checkAuth, async (req, res) => {
+  res.writeHead(201, {
+    'Content-Type': 'text/plain',
+  });
+  res.end(JSON.stringify('Profile Works'));
 });
 
 module.exports = Router;

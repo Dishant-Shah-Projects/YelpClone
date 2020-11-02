@@ -1,7 +1,17 @@
 /* eslint-disable no-unused-vars */
 const express = require('express');
+const multer = require('multer');
 
 const Router = express.Router();
+const multerStorage = multer.diskStorage({
+  destination: (req, file, cb) => {
+    cb(null, 'public/images');
+  },
+  filename(req, file, cb) {
+    cb(null, `${file.fieldname}-${Date.now()}.jpg`);
+  },
+});
+const upload = multer({ storage: multerStorage }).single('food');
 const {
   getProfile,
   profileUpdate,
@@ -32,7 +42,7 @@ Router.post('/Menu', async (req, res) => {
   return value;
 });
 // menu add
-Router.post('/menuAdd', async (req, res) => {
+Router.post('/menuAdd', upload, async (req, res) => {
   const value = await menuAdd(req, res);
   return value;
 });

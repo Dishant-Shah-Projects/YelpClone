@@ -3,7 +3,8 @@ const mongoose = require('mongoose');
 const customerSchema = new mongoose.Schema({
   customerID: { type: Number, required: true },
   UserName: { type: String, required: true },
-  Name: { type: String },
+  FirstName: { type: String },
+  LastName: { type: String },
   ProfilePicURL: { type: String },
   Email: { type: String },
   Password: { type: String, required: true },
