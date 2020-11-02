@@ -8,6 +8,30 @@ const order = require('../models/order');
 const events = require('../models/events');
 const messages = require('../models/Messages');
 
+const profileUpdate = async (req, res) => {
+  try {
+    const {
+      customerID, Email, DOB, City, State, Country, Headline, Nickname,
+    } = req.body;
+    Customer.findOneAndUpdate({ customerID }, {
+      Email, DOB, City, State, Country, Headline, Nickname,
+    }, (err, results) => {
+      if (err) {
+        res.writeHead(500, {
+          'Content-Type': 'text/plain',
+        });
+        res.end('Restaurant not found');
+      } else {
+        res.end(JSON.stringify(results));
+      }
+    });
+  } catch {
+    res.writeHead(500, { 'content-type': 'text/json' });
+    res.end(JSON.stringify('Network Error'));
+  }
+  return res;
+};
+
 const getProfile = async (req, res) => {
   try {
     const { customerID } = req.query;
@@ -115,13 +139,14 @@ const messageSend = async (req, res) => {
   }
   return res;
 };
-const profileUpdate = async (req, res) => {
+const profilePictureUpdate = async (req, res) => {
   try {
     const {
-      customerID, Email, DOB, City, State, Country, Headline, Nickname,
+      customerID,
     } = req.body;
+    const Filename = req.file.filename;
     Customer.findOneAndUpdate({ customerID }, {
-      Email, DOB, City, State, Country, Headline, Nickname,
+      ProfilePicURL: Filename,
     }, (err, results) => {
       if (err) {
         res.writeHead(500, {
@@ -477,4 +502,5 @@ module.exports = {
   customerProfile,
   getEvents,
   getOrders,
+  profilePictureUpdate,
 };

@@ -1,8 +1,17 @@
 /* eslint-disable no-unused-vars */
 const express = require('express');
+const multer = require('multer');
 
 const Router = express.Router();
-
+const multerStorage = multer.diskStorage({
+  destination: (req, file, cb) => {
+    cb(null, 'public/images');
+  },
+  filename(req, file, cb) {
+    cb(null, `${file.fieldname}-${Date.now()}.jpg`);
+  },
+});
+const upload = multer({ storage: multerStorage }).single('profileImage');
 const {
   getProfile,
   profileUpdate,
@@ -19,7 +28,7 @@ const {
   customerProfile,
   getEvents,
   getOrders,
-
+  profilePictureUpdate,
 } = require('../Functionality/customerFunctionality');
 // loadprofile
 Router.get('/profile', async (req, res) => {
@@ -31,8 +40,9 @@ Router.post('/profileUpdate', async (req, res) => {
   const value = await profileUpdate(req, res);
   return value;
 });
-Router.post('/profilePicture', async (req, res) => {
-
+Router.post('/profilePicture', upload, async (req, res) => {
+  const value = await profilePictureUpdate(req,res);
+  return value;
 });
 Router.post('/profileAbout', async (req, res) => {
   const value = await updateAbout(req, res);
@@ -61,7 +71,6 @@ Router.post('/restaurantRatings', async (req, res) => {
   return value;
 });
 Router.post('/restaurantRatingsAdd', async (req, res) => {
-  console.log(req.body);
   const value = await restaurantRatingAdd(req, res);
   return value;
 });
@@ -72,7 +81,6 @@ Router.post('/orders', async (req, res) => {
   const value = await getOrders(req, res);
   return value;
 });
-
 // orders customerprofilepage
 Router.post('/customerProfile', async (req, res) => {
   const value = await customerProfile(req, res);
@@ -83,11 +91,11 @@ Router.post('/events', async (req, res) => {
   return value;
 });
 Router.post('/eventsregister', async (req, res) => {
-  console.log(req.body);
   const value = await eventsRegister(req, res);
   return value;
 });
 Router.post('/customerSearch', async (req, res) => {
+
 });
 Router.post('/customerFollow', async (req, res) => {
   const value = await customerFollow(req, res);
