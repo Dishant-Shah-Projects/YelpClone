@@ -15,7 +15,9 @@ const restaurantRoute = require('./Routes/restaurantroutes');
 const customerRoute = require('./Routes/customerroutes');
 
 const app = express();
+const { auth } = require('./Functionality/passport');
 
+auth();
 app.use(cors({ origin: frontendURL, credentials: true }));
 // use express session to maintain session data
 app.use(
@@ -38,7 +40,7 @@ app.use(function (req, res, next) {
   res.setHeader('Access-Control-Allow-Methods', 'GET,HEAD,POST,PUT,DELETE,OPTIONS');
   res.setHeader(
     'Access-Control-Allow-Headers',
-    'Access-Control-Allow-Headers, Authorization, Origin,Accept, X-Requested-With, Content-Type, Access-Control-Request-Method, Access-Control-Request-Headers'
+    'Access-Control-Allow-Headers, Authorization, Origin,Accept, X-Requested-With, Content-Type, Access-Control-Request-Method, Access-Control-Request-Headers',
   );
   res.setHeader('Cache-Control', 'no-cache');
   next();
@@ -52,23 +54,10 @@ const options = {
   useFindAndModify: false,
 };
 
-// eslint-disable-next-line no-unused-vars
-mongoose.connect(mongoDB, options, (err, res) => {
-  if (err) {
-    // eslint-disable-next-line no-console
-    console.log('MongoDB connection Failed', err);
-  } else {
-    // eslint-disable-next-line no-console
-    console.log('MongoDB Connected');
-  }
-});
-
 app.use('/general', commonPart);
 
 app.use('/restaurant', restaurantRoute);
 
 app.use('/customer', customerRoute);
-
-
 
 app.listen(3001);

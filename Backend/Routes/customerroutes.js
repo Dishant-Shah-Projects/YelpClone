@@ -1,8 +1,14 @@
 /* eslint-disable no-unused-vars */
+/* eslint-disable no-console */
 const express = require('express');
 const multer = require('multer');
+const kafka = require('../kafka/client');
 
 const Router = express.Router();
+const { auth, checkAuth } = require('../Functionality/passport');
+
+auth();
+
 const multerStorage = multer.diskStorage({
   destination: (req, file, cb) => {
     cb(null, 'public/images');
@@ -13,104 +19,343 @@ const multerStorage = multer.diskStorage({
 });
 const upload = multer({ storage: multerStorage }).single('profileImage');
 const {
-  getProfile,
-  profileUpdate,
-  messageLoad,
-  messageSend,
-  updateAbout,
-  restaurantProfile,
-  restaurantOrder,
-  restaurantRatingAdd,
-  restaurantRating,
-  getMenu,
-  customerFollow,
-  eventsRegister,
-  customerProfile,
-  getEvents,
-  getOrders,
+
   profilePictureUpdate,
-  restaurantSearch,
-  customerSearch,
 } = require('../Functionality/customerFunctionality');
 // loadprofile
-Router.get('/profile', async (req, res) => {
-  const value = await getProfile(req, res);
-  return value;
+Router.get('/profile', checkAuth, async (req, res) => {
+  const data = {
+    api: 'getProfile',
+    query: req.query,
+  };
+  kafka.make_request('customer444', checkAuth, data, (err, results) => {
+    console.log('in result');
+    console.log(results);
+    if (err) {
+      console.log('Inside err');
+      res.status(500);
+      res.end('Network Error');
+    } else {
+      console.log('Inside else');
+      res.status(results.status);
+      res.end(results.end);
+    }
+  });
 });
 // update profile
-Router.post('/profileUpdate', async (req, res) => {
-  const value = await profileUpdate(req, res);
-  return value;
+Router.post('/profileUpdate', checkAuth, async (req, res) => {
+  const data = {
+    api: 'profileUpdate',
+    body: req.body,
+  };
+  kafka.make_request('customer444', data, (err, results) => {
+    console.log('in result');
+    console.log(results);
+    if (err) {
+      console.log('Inside err');
+      res.status(500);
+      res.end('Network Error');
+    } else {
+      console.log('Inside else');
+      res.status(results.status);
+      res.end(results.end);
+    }
+  });
 });
 Router.post('/profilePicture', upload, async (req, res) => {
   const value = await profilePictureUpdate(req, res);
   return value;
 });
-Router.post('/profileAbout', async (req, res) => {
-  const value = await updateAbout(req, res);
-  return value;
+Router.post('/profileAbout', checkAuth, async (req, res) => {
+  const data = {
+    api: 'updateAbout',
+    body: req.body,
+  };
+  kafka.make_request('customer444', data, (err, results) => {
+    console.log('in result');
+    console.log(results);
+    if (err) {
+      console.log('Inside err');
+      res.status(500);
+      res.end('Network Error');
+    } else {
+      console.log('Inside else');
+      res.status(results.status);
+      res.end(results.end);
+    }
+  });
 });
-Router.post('/restaurantSearch', async (req, res) => {
-  const value = await restaurantSearch(req, res);
-  return value;
+Router.post('/restaurantSearch', checkAuth, async (req, res) => {
+  const data = {
+    api: 'restaurantSearch',
+    body: req.body,
+  };
+  kafka.make_request('customer444', data, (err, results) => {
+    console.log('in result');
+    console.log(results);
+    if (err) {
+      console.log('Inside err');
+      res.status(500);
+      res.end('Network Error');
+    } else {
+      console.log('Inside else');
+      res.status(results.status);
+      res.end(results.end);
+    }
+  });
 });
 
 // Components for restaurant page
-Router.post('/restaurantProfile', async (req, res) => {
-  const value = await restaurantProfile(req, res);
-  return value;
+Router.get('/restaurantProfile', checkAuth, async (req, res) => {
+  const data = {
+    api: 'restaurantProfile',
+    query: req.query,
+  };
+  kafka.make_request('customer444', data, (err, results) => {
+    console.log('in result');
+    console.log(results);
+    if (err) {
+      console.log('Inside err');
+      res.status(500);
+      res.end('Network Error');
+    } else {
+      console.log('Inside else');
+      res.status(results.status);
+      res.end(results.end);
+    }
+  });
 });
 
-Router.post('/restaurantaddOrder', async (req, res) => {
-  const value = await restaurantOrder(req, res);
-  return value;
+Router.post('/restaurantaddOrder', checkAuth, async (req, res) => {
+  const data = {
+    api: 'restaurantOrder',
+    body: req.body,
+  };
+  kafka.make_request('customer444', data, (err, results) => {
+    console.log('in result');
+    console.log(results);
+    if (err) {
+      console.log('Inside err');
+      res.status(500);
+      res.end('Network Error');
+    } else {
+      console.log('Inside else');
+      res.status(results.status);
+      res.end(results.end);
+    }
+  });
 });
-Router.post('/restaurantMenu', async (req, res) => {
-  const value = await getMenu(req, res);
-  return value;
+Router.post('/restaurantMenu', checkAuth, async (req, res) => {
+  const data = {
+    api: 'restaurantMenu',
+    body: req.body,
+  };
+  kafka.make_request('customer444', data, (err, results) => {
+    console.log('in result');
+    console.log(results);
+    if (err) {
+      console.log('Inside err');
+      res.status(500);
+      res.end('Network Error');
+    } else {
+      console.log('Inside else');
+      res.status(results.status);
+      res.end(results.end);
+    }
+  });
 });
-Router.post('/restaurantRatings', async (req, res) => {
-  const value = await restaurantRating(req, res);
-  return value;
+Router.post('/restaurantRatings', checkAuth, async (req, res) => {
+  const data = {
+    api: 'restaurantRating',
+    body: req.body,
+  };
+  kafka.make_request('customer444', data, (err, results) => {
+    console.log('in result');
+    console.log(results);
+    if (err) {
+      console.log('Inside err');
+      res.status(500);
+      res.end('Network Error');
+    } else {
+      console.log('Inside else');
+      res.status(results.status);
+      res.end(results.end);
+    }
+  });
 });
-Router.post('/restaurantRatingsAdd', async (req, res) => {
-  const value = await restaurantRatingAdd(req, res);
-  return value;
+Router.post('/restaurantRatingsAdd', checkAuth, async (req, res) => {
+  const data = {
+    api: 'restaurantRatingAdd',
+    body: req.body,
+  };
+  kafka.make_request('customer444', data, (err, results) => {
+    console.log('in result');
+    console.log(results);
+    if (err) {
+      console.log('Inside err');
+      res.status(500);
+      res.end('Network Error');
+    } else {
+      console.log('Inside else');
+      res.status(results.status);
+      res.end(results.end);
+    }
+  });
 });
 
 // compoents for orders page
 // orders view pagination
-Router.post('/orders', async (req, res) => {
-  const value = await getOrders(req, res);
-  return value;
+Router.post('/orders', checkAuth, async (req, res) => {
+  const data = {
+    api: 'getOrders',
+    body: req.body,
+  };
+  kafka.make_request('customer444', data, (err, results) => {
+    console.log('in result');
+    console.log(results);
+    if (err) {
+      console.log('Inside err');
+      res.status(500);
+      res.end('Network Error');
+    } else {
+      console.log('Inside else');
+      res.status(results.status);
+      res.end(results.end);
+    }
+  });
 });
 // orders customerprofilepage
-Router.post('/customerProfile', async (req, res) => {
-  const value = await customerProfile(req, res);
-  return value;
+Router.get('/customerProfile', checkAuth, async (req, res) => {
+  const data = {
+    api: 'customerProfile',
+    query: req.query,
+  };
+  kafka.make_request('customer444', data, (err, results) => {
+    console.log('in result');
+    console.log(results);
+    if (err) {
+      console.log('Inside err');
+      res.status(500);
+      res.end('Network Error');
+    } else {
+      console.log('Inside else');
+      res.status(results.status);
+      res.end(results.end);
+    }
+  });
 });
-Router.post('/events', async (req, res) => {
-  const value = await getEvents(req, res);
-  return value;
+Router.post('/events', checkAuth, async (req, res) => {
+  const data = {
+    api: 'getEvents',
+    body: req.body,
+  };
+  kafka.make_request('customer444', data, (err, results) => {
+    console.log('in result');
+    console.log(results);
+    if (err) {
+      console.log('Inside err');
+      res.status(500);
+      res.end('Network Error');
+    } else {
+      console.log('Inside else');
+      res.status(results.status);
+      res.end(results.end);
+    }
+  });
 });
-Router.post('/eventsregister', async (req, res) => {
-  const value = await eventsRegister(req, res);
-  return value;
+Router.post('/eventsregister', checkAuth, async (req, res) => {
+  const data = {
+    api: 'eventsRegister',
+    body: req.body,
+  };
+  kafka.make_request('customer444', data, (err, results) => {
+    console.log('in result');
+    console.log(results);
+    if (err) {
+      console.log('Inside err');
+      res.status(500);
+      res.end('Network Error');
+    } else {
+      console.log('Inside else');
+      res.status(results.status);
+      res.end(results.end);
+    }
+  });
 });
-Router.post('/customerSearch', async (req, res) => {
-  const value = await customerSearch(req, res);
-  return value;
+Router.post('/customerSearch', checkAuth, async (req, res) => {
+  const data = {
+    api: 'customerSearch',
+    body: req.body,
+  };
+  kafka.make_request('customer444', data, (err, results) => {
+    console.log('in result');
+    console.log(results);
+    if (err) {
+      console.log('Inside err');
+      res.status(500);
+      res.end('Network Error');
+    } else {
+      console.log('Inside else');
+      res.status(results.status);
+      res.end(results.end);
+    }
+  });
 });
-Router.post('/customerFollow', async (req, res) => {
-  const value = await customerFollow(req, res);
-  return value;
+Router.post('/customerFollow', checkAuth, async (req, res) => {
+  const data = {
+    api: 'customerFollow',
+    body: req.body,
+  };
+  kafka.make_request('customer444', data, (err, results) => {
+    console.log('in result');
+    console.log(results);
+    if (err) {
+      console.log('Inside err');
+      res.status(500);
+      res.end('Network Error');
+    } else {
+      console.log('Inside else');
+      res.status(results.status);
+      res.end(results.end);
+    }
+  });
 });
-Router.post('/Messagesend', async (req, res) => {
-  const value = await messageSend(req, res);
-  return value;
+Router.post('/messageSend', checkAuth, async (req, res) => {
+  const data = {
+    api: 'messageSend',
+    body: req.body,
+  };
+  kafka.make_request('customer444', data, (err, results) => {
+    console.log('in result');
+    console.log(results);
+    if (err) {
+      console.log('Inside err');
+      res.status(500);
+      res.end('Network Error');
+    } else {
+      console.log('Inside else');
+      res.status(results.status);
+      res.end(results.end);
+    }
+  });
 });
-Router.post('/Messageload', async (req, res) => {
-  const value = await messageLoad(req, res);
-  return value;
+Router.post('/Messageload', checkAuth, async (req, res) => {
+  const data = {
+    api: 'messageLoad',
+    body: req.body,
+  };
+  kafka.make_request('customer444', data, (err, results) => {
+    console.log('in result');
+    console.log(results);
+    if (err) {
+      console.log('Inside err');
+      res.status(500);
+      res.end('Network Error');
+    } else {
+      console.log('Inside else');
+      res.status(results.status);
+      res.end(results.end);
+    }
+  });
 });
 module.exports = Router;

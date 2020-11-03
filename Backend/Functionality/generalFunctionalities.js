@@ -15,7 +15,6 @@ const userSignup = async (req, res) => {
     const {
       FirstName, LastName, UserName, Password, Role, location,
     } = req.body;
-    console.log(req.body);
     if (Role === 'Restaurant') {
       let lat = null;
       let lng = null;
@@ -25,10 +24,9 @@ const userSignup = async (req, res) => {
           key: 'AIzaSyBej0Pq1ieVvLjN9gq-ic0_GL81LytLEH4',
         },
       });
-      console.log(data);
       lat = data.data.results[0].geometry.location.lat;
       lng = data.data.results[0].geometry.location.lng;
-      const restaurantID = await Restaurant.findOne({ $query: {}, $orderby: { restaurantID: -1 } });
+      const restaurantID = await Restaurant.findOne().sort('-restaurantID');
       const newID = restaurantID.restaurantID + 1;
       const hashedPassword = await bcrypt.hash(Password, 10);
       const restaurant = new Restaurant({
@@ -55,8 +53,9 @@ const userSignup = async (req, res) => {
         }
       });
     } else {
-      const restaurantID = await Customer.findOne({ $query: {}, $orderby: { customerID: -1 } });
-      const newID = restaurantID.customerID + 1;
+      const customer = await Customer.findOne().sort('-customerID');
+      const newID = customer.customerID + 1;
+      console.log(customer);
       const hashedPassword = await bcrypt.hash(Password, 10);
       const custom = new Customer({
         customerID: newID,
