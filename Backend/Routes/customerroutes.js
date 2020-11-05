@@ -28,7 +28,7 @@ Router.get('/profile', checkAuth, async (req, res) => {
     api: 'getProfile',
     query: req.query,
   };
-  kafka.make_request('customer444', checkAuth, data, (err, results) => {
+  kafka.make_request('customer444', data, (err, results) => {
     console.log('in result');
     console.log(results);
     if (err) {

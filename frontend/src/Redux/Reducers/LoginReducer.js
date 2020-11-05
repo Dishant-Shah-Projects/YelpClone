@@ -1,21 +1,22 @@
-import { login } from '../constants/actiontypes';
+import { login } from "../constants/actiontypes";
 const defaultState = {
-    logininfo:{
-    Role:"",
-    ID:""
-    }
+  userInfo: {
+    Role: "",
+    ID: "",
+  },
 };
 const LoginReducer = (state = defaultState, action) => {
-    switch (action.type) {
-        case login: {
-          return {
-            ...state,
-            logininfo: { ...state.logininfo, ...action.payload },
-            //   return Object.assign(state, action.payload);
-          };
-        }
-        default: {
-            return { ...state };
-          }
-}}
+  switch (action.type) {
+    case login: {
+      return {
+        ...state,
+        userInfo: { ...action.payload },
+        //   return Object.assign(state, action.payload);
+      };
+    }
+    default: {
+      return { ...state };
+    }
+  }
+};
 export default LoginReducer;

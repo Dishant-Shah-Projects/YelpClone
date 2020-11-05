@@ -16,6 +16,7 @@
     "google-map-react": "^2.1.7",
     "google-maps-react": "^2.0.6",
     "history": "^5.0.0",
+    "jquery": "^3.5.1",
     "jwt-decode": "^3.0.0",
     "material-ui": "^0.20.2",
     "mdbreact": "^4.27.0",
@@ -26,6 +27,7 @@
     "react-js-pagination": "^3.0.3",
     "react-notifications-component": "^2.4.1",
     "react-paginate": "^6.5.0",
+    "react-rating": "^2.0.5",
     "react-redux": "^7.2.1",
     "react-router-dom": "^5.2.0",
     "react-scripts": "3.4.3",
@@ -62,5 +64,13 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
+  },
+  "devDependencies": {
+    "eslint-config-airbnb": "^18.2.0",
+    "eslint-plugin-import": "^2.22.1",
+    "eslint-plugin-jsx-a11y": "^6.4.1",
+    "eslint-plugin-react": "^7.21.5",
+    "eslint-plugin-react-hooks": "^4.2.0",
+    "prettier": "2.1.2"
   }
 }
