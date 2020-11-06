@@ -1,10 +1,8 @@
 import React, { Component } from "react";
-import { Link } from "react-router-dom";
 import axios from "axios";
-import { Redirect } from "react-router";
-import { profile } from '../../Redux/constants/actiontypes';
+import { profile } from "../../Redux/constants/actiontypes";
 import download from "./download.png";
-import {backendURL} from '../../config';
+import { backendURL } from "../../config";
 import {
   Container,
   Card,
@@ -12,40 +10,34 @@ import {
   Col,
   ListGroup,
   ListGroupItem,
-  Button,
   Jumbotron,
   Image,
   Nav,
   Tab,
 } from "react-bootstrap";
 import "bootstrap/dist/css/bootstrap.min.css";
-import ProfileUpdate from "./customeraboutupdate";
+import ProfileUpdate from "./aboutUpdate";
 import ProfilePicUpload from "./profilepicupload";
 import ProfileUpdate2 from "./ProfileUpdate";
-import { connect } from 'react-redux';
-import { login } from '../../Redux/constants/actiontypes';
+import { connect } from "react-redux";
 class CustomerHome extends Component {
   constructor(ownprops) {
     super(ownprops);
     console.log(ownprops);
     this.state = {
-      user: this.props.userInfo,
+      user: ownprops.userInfo,
       userinfo: "",
       userimage: download,
-      findmein: "",
-      thingsilove: "",
-      yelpingsince: "",
     };
   }
   componentDidMount() {
-    console.log(backendURL + '/customer/profile');
-    const data = {
-      customerID: this.state.user.ID,
-    };
+    console.log(backendURL + "/customer/profile");
 
-    axios.defaults.headers.common['authorization'] = localStorage.getItem('token');
+    axios.defaults.headers.common["authorization"] = localStorage.getItem(
+      "token"
+    );
     axios
-      .get(backendURL + '/customer/profile', {
+      .get(backendURL + "/customer/profile", {
         params: {
           customerID: this.state.user.ID,
         },
@@ -64,12 +56,11 @@ class CustomerHome extends Component {
     //iterate over books to create a table row
 
     //if not logged in go to login page
-    
-    var _id = "test@test.com2";
-    var _id2 = "test@test.com";
+
+    // var _id = "test@test.com2";
+    // var _id2 = "test@test.com";
     return (
       <React.Fragment>
-        
         <Container>
           <Jumbotron fluid>
             <Container>
@@ -82,19 +73,19 @@ class CustomerHome extends Component {
                 </Col>
                 <Col md={9}>
                   <Card>
-                    <Card.Title>{this.state.userinfo.User_name}</Card.Title>
-                    <a>Nickname:{this.state.userinfo.nickname}</a>
-                    <a>Location:{this.state.userinfo.city}</a>
+                    <Card.Title>{this.state.userinfo.FirstName + " "+this.state.userinfo.LastName}</Card.Title>
+                    <a>Nickname:{this.state.userinfo.Nickname}</a>
+                    <a>Location:{this.state.userinfo.City}</a>
                     <a>
-                      {this.state.userinfo.state}, {this.state.userinfo.country}
+                      {this.state.userinfo.State}, {this.state.userinfo.Country}
                     </a>
 
                     <ListGroup className="list-group-flush">
                       <ListGroupItem>
-                        Phone Number: {this.state.userinfo.Conphone}
+                        Phone Number: {this.state.userinfo.Password}
                       </ListGroupItem>
                       <ListGroupItem>
-                        Email: {this.state.userinfo.Conemail}
+                        Email: {this.state.userinfo.Email}
                       </ListGroupItem>
                     </ListGroup>
                     <a style={{ fontStyle: "italic" }}>
@@ -129,9 +120,9 @@ class CustomerHome extends Component {
                 <Tab.Content>
                   <Tab.Pane eventKey="first">
                     <h1>About me</h1>
-                    <h3>Find Me in : {this.state.findmein}</h3>
-                    <h3>Things I Love : {this.state.thingsilove}</h3>
-                    <h3>Yelping Since : {this.state.yelpingsince}</h3>
+                    <h3>Find Me in : {this.state.userinfo.Findme}</h3>
+                    <h3>Things I Love : {this.state.userinfo.ThingsILove}</h3>
+                    <h3>Yelping Since : {this.state.userinfo.AboutMe}</h3>
                   </Tab.Pane>
                   <Tab.Pane eventKey="second">
                     <ProfileUpdate2></ProfileUpdate2>
@@ -153,11 +144,11 @@ class CustomerHome extends Component {
 }
 
 //export Home Component
-const mapStateToProps = (state,ownprops) => {
+const mapStateToProps = (state, ownprops) => {
   console.log(state.LoginReducer.userInfo);
-  const  userInfo  = state.LoginReducer.userInfo;
+  const userInfo = state.LoginReducer.userInfo;
   return {
-      userInfo: userInfo,
+    userInfo: userInfo,
   };
 };
 

@@ -1,12 +1,12 @@
 import React, { Component } from "react";
 
 import "bootstrap/dist/css/bootstrap.min.css";
-import CustomerHome from "./CustomerHome";
-import RestaurantHome from "./RestaurantHome";
+import customerMessage from "./customerMessage";
+import restaurantMessage from "./restaurantMessage";
 import { Redirect } from "react-router";
 import Navbar2 from "../navbar/UserNavbar";
 import Navbar3 from "../navbar/RestaurantNavbar"
-class Home extends Component {
+class messageTab extends Component {
   render() {
     //iterate over books to create a table row
 
@@ -14,13 +14,13 @@ class Home extends Component {
     if (localStorage.getItem("userrole") === "Customer") {
       return( <>
       <Navbar2></Navbar2>
-      <CustomerHome></CustomerHome>
+      <customerMessage></customerMessage>
         </>
         );
     } else if (localStorage.getItem("userrole") === "Restaurant") {
       return( <>
         <Navbar3></Navbar3>
-        <RestaurantHome></RestaurantHome>
+        <restaurantMessage></restaurantMessage>
           </>
           );
     } else {
@@ -32,4 +32,4 @@ class Home extends Component {
 }
 
 //export Home Component
-export default Home;
+export default messageTab;

@@ -2,16 +2,10 @@ import React, { Component } from "react";
 
 import axios from "axios";
 import "bootstrap/dist/css/bootstrap.min.css";
-import {
-  Card,
-  Form,
-  Row,
-  FormGroup,
-  FormLabel,
-  Button,
-  Image,
-} from "react-bootstrap";
+import { Card, Form, Row, Button } from "react-bootstrap";
 import cookie from "react-cookies";
+import { backendURL } from "../../config";
+
 class ProfilePicUpload extends Component {
   constructor(props) {
     super(props);
@@ -35,9 +29,12 @@ class ProfilePicUpload extends Component {
       this.state.selectedFile,
       this.state.selectedFile.name
     );
-    formData.append("customer", this.state.customer);
+    formData.append("customerID", this.state.customer);
+    axios.defaults.headers.common["authorization"] = localStorage.getItem(
+      "token"
+    );
     axios
-      .post("http://localhost:3001/profilepictureupload", formData)
+      .post(backendURL+"/customer/profilePicture", formData)
 
       .then((response) => {
         //update the state with the response data

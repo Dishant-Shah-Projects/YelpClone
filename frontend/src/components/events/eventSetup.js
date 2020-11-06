@@ -2,8 +2,7 @@ import React, { Component } from "react";
 import "../../App.css";
 
 import cookie from "react-cookies";
-import { Link } from "react-router-dom";
-import { Redirect } from "react-router";
+import { backendURL } from "../../config";
 import axios from "axios";
 import { Form, Row, Col } from "react-bootstrap";
 import "bootstrap/dist/css/bootstrap.min.css";
@@ -73,23 +72,26 @@ class Setups extends Component {
   }
 
   submit = (e) => {
-    var headers = new Headers();
     //prevent page from refresh
     e.preventDefault();
     const data = {
-      RestaurantEmail: this.state.user,
+      restaurantID: this.state.user,
+      restaurantName: this.state.user,
       EventName: this.state.EventName,
-      EventDescription: this.state.EventDescription,
-      EventTime: this.state.EventTime,
-      EventDate: this.state.EventDate,
-      EventLocation: this.state.EventLocation,
-      EventHastags: this.state.EventHastags,
+      Description: this.state.EventDescription,
+      Time: this.state.EventTime,
+      Date: this.state.EventDate,
+      Location: this.state.EventLocation,
+      Hashtags: this.state.EventHastags,
     };
 
     //set the with credentials to true
     axios.defaults.withCredentials = true;
     //make a post request with the user data
-    axios.post("http://localhost:3001/setup", data).then((response) => {
+    axios.defaults.headers.common["authorization"] = localStorage.getItem(
+      "token"
+    );
+    axios.post(backendURL+"/restaurant/eventsPost", data).then((response) => {
       console.log("Status Code : ", response.status);
       if (response.status === 200) {
         this.setState({

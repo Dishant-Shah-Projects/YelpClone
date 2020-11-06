@@ -10,15 +10,11 @@ import {
   FormControl,
 } from "react-bootstrap";
 import cookie from "react-cookies";
-import { Link } from "react-router-dom";
-import { Redirect } from "react-router";
 import axios from "axios";
-import Setups from "./setup";
-import $ from "jquery";
-import Popper from "popper.js";
 import "bootstrap/dist/js/bootstrap.bundle.min";
 import "bootstrap/dist/css/bootstrap.min.css";
-import Regevent from "./register";
+import Regevent from "./eventRegister";
+import { backendURL } from "../../config";
 class Userevents extends Component {
   constructor(props) {
     super(props);
@@ -35,11 +31,8 @@ class Userevents extends Component {
   }
   componentDidMount() {
     console.log(this.state.user);
-    const data = {
-      username: this.state.user,
-    };
     axios
-      .get("http://localhost:3001/events")
+      .get(backendURL+"/events")
 
       .then((response) => {
         //update the state with the response data
@@ -61,7 +54,7 @@ class Userevents extends Component {
       username: this.state.user,
     };
     axios
-      .get("http://localhost:3001/userevents")
+      .get(backendURL+"/userevents")
 
       .then((response) => {
         //update the state with the response data
@@ -78,7 +71,7 @@ class Userevents extends Component {
     };
     console.log("yolo");
     axios
-      .post("http://localhost:3001/eventsreg", data)
+      .post(backendURL+"/eventsreg", data)
 
       .then((response) => {
         //update the state with the response data
@@ -97,7 +90,7 @@ class Userevents extends Component {
     console.log(data2);
     console.log("yolo");
     axios
-      .post("http://localhost:3001/eventsup", data2)
+      .post(backendURL+"/eventsup", data2)
 
       .then((response) => {
         //update the state with the response data
@@ -110,22 +103,6 @@ class Userevents extends Component {
   };
 
   render() {
-    let navLogin = null;
-    let redirectVar = null;
-
-    navLogin = (
-      <ul className="nav navbar-nav navbar-right">
-        <li>
-          <Link to="/login">
-            <span className="glyphicon glyphicon-log-in"></span> Login
-          </Link>
-        </li>
-      </ul>
-    );
-    if (!cookie.load("user")) {
-      console.log(cookie.load("user"));
-      return (redirectVar = <Redirect to="/login" />);
-    }
     console.log(this.state.Events);
     let eventsdisp = null;
     eventsdisp = this.state.dispEvents.map((eve) => {

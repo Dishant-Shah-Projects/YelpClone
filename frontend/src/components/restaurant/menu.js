@@ -1,22 +1,11 @@
 import React, { Component } from "react";
-import { Link } from "react-router-dom";
 import cookie from "react-cookies";
-import { Redirect } from "react-router";
-import {
-  Navbar,
-  NavDropdown,
-  Nav,
-  FormControl,
-  Button,
-  Form,
-  Container,
-  Card,
-  FormGroup,
-} from "react-bootstrap";
+import { Button, Form, Container, FormGroup } from "react-bootstrap";
 import "bootstrap/dist/css/bootstrap.min.css";
 import axios from "axios";
-import Menuitem from "./menuitem";
+import Menuitem from "./menuItem";
 import Cart from "./cart.js";
+import { backendURL } from "../../config";
 class Menu extends Component {
   constructor(props) {
     super(props);
@@ -37,8 +26,11 @@ class Menu extends Component {
     const data = {
       Restaurant: this.state.Restaurant,
     };
+    axios.defaults.headers.common["authorization"] = localStorage.getItem(
+      "token"
+    );
     axios
-      .post("http://localhost:3001/menu", data)
+      .post(backendURL+"/menu", data)
 
       .then((response) => {
         //update the state with the response data

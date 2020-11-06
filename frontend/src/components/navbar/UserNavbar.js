@@ -1,24 +1,23 @@
 import React, { Component } from "react";
 import { Link } from "react-router-dom";
 import cookie from "react-cookies";
-import { Redirect } from "react-router";
-import {
-  Navbar,
-  NavDropdown,
-  Nav,
-  FormControl,
-  Button,
-  Form,
-} from "react-bootstrap";
+import { Navbar, Nav } from "react-bootstrap";
 import "bootstrap/dist/css/bootstrap.min.css";
+import { connect } from "react-redux";
+import { login } from "../../Redux/constants/actiontypes";
 class Navbar2 extends Component {
-  constructor(props) {
-    super(props);
+  constructor(ownprops) {
+    super(ownprops);
     this.state = {
-      user: "",
+      user: ownprops.userInfo,
     };
-    console.log(props);
     this.handleLogout = this.handleLogout.bind(this);
+  }
+  componentDidMount() {
+    if ((this.state.user.ID==="") &&(localStorage.getItem("userId"))){
+      let userInfo = { Role: localStorage.getItem("userrole"), ID: localStorage.getItem("userId") };
+      this.props.login(userInfo);
+    }
   }
   //handle logout to destroy the cookie
   handleLogout = () => {
@@ -42,7 +41,7 @@ class Navbar2 extends Component {
       );
     } else {
       //Else display login button
-      
+
       navLogin = (
         <ul className="nav navbar-nav navbar-right">
           <li>
@@ -83,4 +82,23 @@ class Navbar2 extends Component {
   }
 }
 
-export default Navbar2;
+const mapStateToProps = (state) => {
+  const userInfo = state.LoginReducer.userInfo;
+  return {
+    userInfo: userInfo,
+  };
+};
+
+const mapDispatchToProps = (dispatch) => {
+  return {
+    login: (payload) => {
+      dispatch({
+        type: login,
+        payload,
+      });
+    },
+  };
+};
+
+//export Login Component
+export default connect(mapStateToProps, mapDispatchToProps)(Navbar2);

@@ -2,12 +2,10 @@ import React, { Component } from "react";
 import "../../App.css";
 // import cookie from 'react-cookies';
 import axios from "axios";
-import { Redirect } from "react-router";
 import { Form, Button } from "react-bootstrap";
 import "bootstrap/dist/css/bootstrap.min.css";
-import { setRawCookie } from "react-cookies";
 import cookie from "react-cookies";
-
+import { backendURL } from "../../config";
 class ProfileUpdate2 extends Component {
   constructor(ownprops) {
     super(ownprops);
@@ -18,7 +16,7 @@ class ProfileUpdate2 extends Component {
       state: "",
       country: "",
       nickname: "",
-      userEmail: cookie.load("user"),
+      userEmail: localStorage.getItem("userId"),
       email: null,
       DOB: null,
       phone: null,
@@ -90,20 +88,17 @@ class ProfileUpdate2 extends Component {
   };
 
   submit = (e) => {
-    var headers = new Headers();
     //prevent page from refresh
     e.preventDefault();
     const data = {
-      User_name: this.state.User_name,
-      city: this.state.city,
-      state: this.state.state,
-      country: this.state.country,
-      nickname: this.state.nickname,
-      userEmail: this.state.userEmail,
-      email: this.state.email,
+      City: this.state.city,
+      State: this.state.state,
+      Country: this.state.country,
+      Nickname: this.state.nickname,
+      customerID: this.state.userEmail,
+      Email: this.state.email,
       phone: this.state.phone,
-      details: this.state.details,
-      phone: this.state.phone,
+      Headline: this.state.details,
       DOB: this.state.DOB,
     };
 
@@ -112,7 +107,10 @@ class ProfileUpdate2 extends Component {
     //set the with credentials to true
     axios.defaults.withCredentials = true;
     //make a post request with the user data
-    axios.post("http://localhost:3001/update", data).then((response) => {
+    axios.defaults.headers.common["authorization"] = localStorage.getItem(
+      "token"
+    );
+    axios.post(backendURL+"/customer/profileUpdate", data).then((response) => {
       console.log("Status Code : ", response.status);
       if (response.status === 200) {
         this.setState({

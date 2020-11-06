@@ -1,12 +1,12 @@
 import React, { Component } from "react";
 import "../../App.css";
-import { connect } from 'react-redux';
-import { login } from '../../Redux/constants/actiontypes';
+import { connect } from "react-redux";
+import { login } from "../../Redux/constants/actiontypes";
 import { Link } from "react-router-dom";
 import { Redirect } from "react-router";
 import axios from "axios";
-import jwt_decode from 'jwt-decode';
-import {frontendURL} from '../../config';
+import jwt_decode from "jwt-decode";
+import { backendURL } from "../../config";
 //Define a Login Component
 class Login extends Component {
   //call the constructor method
@@ -55,49 +55,48 @@ class Login extends Component {
   };
   //submit Login handler to send a request to the node backend
   submitLogin = (e) => {
-    var headers = new Headers();
     //prevent page from refresh
     e.preventDefault();
     const data = {
-        UserName: this.state.username,
-        Password: this.state.password,
-        Role:this.state.role
+      UserName: this.state.username,
+      Password: this.state.password,
+      Role: this.state.role,
     };
     axios.defaults.withCredentials = true;
     //make a post request with the user data
-    axios.post("http://localhost:3001/general/login", data).then((response) => {
+    axios.post(backendURL + "/general/login", data).then((response) => {
       console.log("Status Code : ", response.status);
       if (response.status === 200) {
         console.log(response);
-        const decoded = jwt_decode(response.data.split(' ')[1]);
-        console.log('role',decoded.rol);
-        localStorage.setItem('token', response.data);
-        localStorage.setItem('userId', decoded.ID);
-        localStorage.setItem('userrole', decoded.rol);
-        localStorage.setItem('useremail', decoded.Name);
-        localStorage.setItem('selectedDropDown', 'Jobs');
-        let userInfo={Role:decoded.rol,ID:decoded.ID};
+        const decoded = jwt_decode(response.data.split(" ")[1]);
+        console.log("role", decoded.rol);
+        localStorage.setItem("token", response.data);
+        localStorage.setItem("userId", decoded.ID);
+        localStorage.setItem("userrole", decoded.rol);
+        localStorage.setItem("useremail", decoded.Name);
+        localStorage.setItem("selectedDropDown", "Jobs");
+        let userInfo = { Role: decoded.rol, ID: decoded.ID };
         this.props.login(userInfo);
         this.setState({
-            authFlag:true,
-        })
-      } 
+          authFlag: true,
+        });
+      }
       //set the with credentials to true
     });
   };
   render() {
     //redirect based on successful login
     let redirectVar = null;
-    if (localStorage.getItem('token')) {
-        if (localStorage.getItem('userrole') === 'Restaurant') {
-          redirectVar = <Redirect to="/Employer" />;
-        } else if (localStorage.getItem('userrole') === 'Customer') {
-          redirectVar = <Redirect to="/home" />;
-        }
+    if (localStorage.getItem("token")) {
+      if (localStorage.getItem("userrole") === "Restaurant") {
+        redirectVar = <Redirect to="/Employer" />;
+      } else if (localStorage.getItem("userrole") === "Customer") {
+        redirectVar = <Redirect to="/home" />;
       }
+    }
     return (
       <div>
-          {redirectVar}
+        {redirectVar}
         <div className="container">
           <div className="login-form">
             <div className="main-div">
@@ -106,12 +105,16 @@ class Login extends Component {
                 <p>Please enter your username and password</p>
               </div>
               <div className="form-group">
-              <label for="cars">Choose a car:</label>
-  <select id="cars" name="cars" size="3" onChange={this.roleChangeHandler}>
-    <option value="Restaurant">Restaurant</option>
-    <option value="Customer">Customer</option>
-  </select>
-
+                <label for="cars">Choose a car:</label>
+                <select
+                  id="cars"
+                  name="cars"
+                  size="3"
+                  onChange={this.roleChangeHandler}
+                >
+                  <option value="Restaurant">Restaurant</option>
+                  <option value="Customer">Customer</option>
+                </select>
               </div>
               <div className="form-group">
                 <input
@@ -147,10 +150,7 @@ class Login extends Component {
               <br />
               <div className="form-group">
                 <p>
-                  <Link to="/restlogin">Restaurant?</Link>
-                </p>
-                <p>
-                  <Link to="/customersignup">sign up?</Link>
+                  <Link to="/signup">sign up?</Link>
                 </p>
               </div>
             </div>
@@ -161,22 +161,22 @@ class Login extends Component {
   }
 }
 const mapStateToProps = (state) => {
-    //const { userInfo } = state.userInfo;
-    return {
-        //userInfo: userInfo,
-    };
+  //const { userInfo } = state.userInfo;
+  return {
+    //userInfo: userInfo,
   };
-  
-  const mapDispatchToProps = (dispatch) => {
-    return {
-        login: (payload) => {
-        dispatch({
-          type: login,
-          payload,
-        });
-      },
-    };
+};
+
+const mapDispatchToProps = (dispatch) => {
+  return {
+    login: (payload) => {
+      dispatch({
+        type: login,
+        payload,
+      });
+    },
   };
+};
 
 //export Login Component
 export default connect(mapStateToProps, mapDispatchToProps)(Login);

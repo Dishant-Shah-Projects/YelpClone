@@ -1,24 +1,12 @@
 import React, { Component } from "react";
 import "../../App.css";
-import {
-  Container,
-  Card,
-  Row,
-  Col,
-  Button,
-  Form,
-  FormControl,
-} from "react-bootstrap";
-import cookie from "react-cookies";
-import { Link } from "react-router-dom";
-import { Redirect } from "react-router";
+import { Container, Card } from "react-bootstrap";
+
 import axios from "axios";
 import Rating from "react-rating";
-import $ from "jquery";
-import Popper from "popper.js";
 import "bootstrap/dist/js/bootstrap.bundle.min";
 import "bootstrap/dist/css/bootstrap.min.css";
-
+import { backendURL } from "../../config";
 class Reviews extends Component {
   constructor(props) {
     super(props);
@@ -30,10 +18,14 @@ class Reviews extends Component {
   componentDidMount() {
     console.log(this.state.user);
     const data = {
-      restaurant: this.state.restaurant,
+      restaurantID: this.state.restaurant,
+      PageNo:0
     };
+    axios.defaults.headers.common["authorization"] = localStorage.getItem(
+      "token"
+    );
     axios
-      .post("http://localhost:3001/reviews", data)
+      .post(backendURL+"restaurant/reviews", data)
 
       .then((response) => {
         //update the state with the response data
@@ -45,25 +37,8 @@ class Reviews extends Component {
   }
 
   render() {
-    let navLogin = null;
-    let redirectVar = null;
-
-    navLogin = (
-      <ul className="nav navbar-nav navbar-right">
-        <li>
-          <Link to="/login">
-            <span className="glyphicon glyphicon-log-in"></span> Login
-          </Link>
-        </li>
-      </ul>
-    );
-    if (!cookie.load("user")) {
-      console.log(cookie.load("user"));
-      return (redirectVar = <Redirect to="/login" />);
-    }
-
     let eventsdisp = null;
-    if (this.state.Reviews != []) {
+    if (this.state.Reviews !== []) {
       eventsdisp = this.state.Reviews.map((eve) => {
         console.log(this.state.restaurant);
         return (

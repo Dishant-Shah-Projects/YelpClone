@@ -1,9 +1,7 @@
 import React, { Component } from "react";
-import { Link } from "react-router-dom";
 import axios from "axios";
 import cookie from "react-cookies";
 import { Redirect } from "react-router";
-import download from "./download.png";
 import {
   Container,
   Card,
@@ -11,10 +9,7 @@ import {
   Col,
   ListGroup,
   ListGroupItem,
-  Button,
   Jumbotron,
-  Image,
-  Carousel,
   Tab,
   Nav,
 } from "react-bootstrap";
@@ -23,25 +18,33 @@ import Reviews from "../restaurantsearchtab/reviews";
 import ProfileUpdate3 from "./restaurantabout";
 import AddMenu from "./menuupload";
 import RestaurantPickUpload from "./Restaurantpicadd";
+import { backendURL } from "../../config";
+import { profile } from "../../Redux/constants/actiontypes";
+import { connect } from "react-redux";
 class RestHome extends Component {
   constructor(ownprops) {
     super(ownprops);
     this.state = {
-      restaurant: cookie.load("user"),
+      user: this.props.userInfo,
       restinfo: "",
     };
   }
   componentDidMount() {
     console.log(this.state.user);
-    const data = {
-      restaurant: this.state.restaurant,
-    };
+    axios.defaults.headers.common["authorization"] = localStorage.getItem(
+      "token"
+    );
     axios
-      .post("http://localhost:3001/restaurantprofile", data)
-
+      .get(backendURL + "/restaurant/profile", {
+        params: {
+          restaurantID: this.state.user.ID,
+        },
+        withCredentials: true,
+      })
       .then((response) => {
         //update the state with the response data
-        console.log(response.data);
+        console.log(response);
+        console.log(response.status);
         this.setState({
           restinfo: response.data,
         });
@@ -133,4 +136,24 @@ class RestHome extends Component {
 }
 
 //export Home Component
-export default RestHome;
+const mapStateToProps = (state, ownprops) => {
+  console.log(state.LoginReducer.userInfo);
+  const userInfo = state.LoginReducer.userInfo;
+  return {
+    userInfo: userInfo,
+  };
+};
+
+const mapDispatchToProps = (dispatch) => {
+  return {
+    profile: (payload) => {
+      dispatch({
+        type: profile,
+        payload,
+      });
+    },
+  };
+};
+
+//export Login Component
+export default connect(mapStateToProps, mapDispatchToProps)(RestHome);

@@ -2,12 +2,10 @@ import React, { Component } from "react";
 import "../../App.css";
 
 import cookie from "react-cookies";
-import { Link } from "react-router-dom";
-import { Redirect } from "react-router";
 import axios from "axios";
-import { Form, Row, Col, Button } from "react-bootstrap";
+import { Form, Row, Button } from "react-bootstrap";
 import "bootstrap/dist/css/bootstrap.min.css";
-
+import { backendURL } from "../../config";
 class AddMenu extends Component {
   constructor(props) {
     super(props);
@@ -69,7 +67,6 @@ class AddMenu extends Component {
   }
 
   submit = (e) => {
-    var headers = new Headers();
     //prevent page from refresh
     e.preventDefault();
     const formData = new FormData();
@@ -88,8 +85,11 @@ class AddMenu extends Component {
     //set the with credentials to true
     axios.defaults.withCredentials = true;
     //make a post request with the user data
+    axios.defaults.headers.common["authorization"] = localStorage.getItem(
+      "token"
+    );
     axios
-      .post("http://localhost:3001/menuupload", formData)
+      .post(backendURL+"/menuupload", formData)
 
       .then((response) => {
         //update the state with the response data

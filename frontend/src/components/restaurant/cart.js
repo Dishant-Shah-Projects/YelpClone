@@ -1,21 +1,6 @@
 import React, { Component } from "react";
-import { Link } from "react-router-dom";
-import cookie from "react-cookies";
-import { Redirect } from "react-router";
-import {
-  Navbar,
-  NavDropdown,
-  Nav,
-  FormControl,
-  Button,
-  Form,
-  Container,
-  Card,
-  Table,
-  FormGroup,
-} from "react-bootstrap";
+import { Container, Table } from "react-bootstrap";
 import "bootstrap/dist/css/bootstrap.min.css";
-import axios from "axios";
 
 class Cart extends Component {
   constructor(props) {
@@ -29,7 +14,7 @@ class Cart extends Component {
     };
   }
   componentDidUpdate(prevProps) {
-    if (prevProps.cart != this.props.cart) {
+    if (prevProps.cart !== this.props.cart) {
       this.setState({
         Cart: this.props.cart,
       });

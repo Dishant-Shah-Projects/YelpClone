@@ -1,24 +1,12 @@
 import React, { Component } from "react";
 import "../../App.css";
-import {
-  Container,
-  Card,
-  Row,
-  Col,
-  Button,
-  Form,
-  FormControl,
-} from "react-bootstrap";
+import { Container, Card, Row, Col, Button, Form } from "react-bootstrap";
 import cookie from "react-cookies";
-import { Link } from "react-router-dom";
-import { Redirect } from "react-router";
 import axios from "axios";
-
-import $ from "jquery";
-import Popper from "popper.js";
 import "bootstrap/dist/js/bootstrap.bundle.min";
 import "bootstrap/dist/css/bootstrap.min.css";
 import Order from "./order";
+import { backendURL } from "../../config";
 // Orders page for users
 class UserOrders extends Component {
   constructor(props) {
@@ -30,17 +18,22 @@ class UserOrders extends Component {
       term: "",
       term2: "",
     };
-
-    this.handleupsearch = this.handleupsearch.bind(this);
     this.updateterm = this.updateterm.bind(this);
   }
   componentDidMount() {
     console.log(this.state.user);
     const data = {
-      useremail: this.state.user,
+      customerID: this.state.user,
+      OrderStatus:"",
+      Sorted:"",
+      Filtered:"",
+      PageNo:"",
     };
+    axios.defaults.headers.common["authorization"] = localStorage.getItem(
+      "token"
+    );
     axios
-      .post("http://localhost:3001/userorders", data)
+      .post(backendURL+"/customer/orders", data)
 
       .then((response) => {
         //update the state with the response data
@@ -61,47 +54,14 @@ class UserOrders extends Component {
       term2: e.target.value,
     });
   };
-  handleupsearch2 = (e) => {
-    var output = this.state.Orders.filter(
-      (order) => order.OrderStatus == this.state.term2
-    );
-    console.log(this.state.term2);
-    console.log(output);
-    this.setState({
-      dispOrders: output,
-    });
-  };
+
   updateterm = (e) => {
     this.setState({
       term: e.target.value,
     });
   };
 
-  handleupsearch = (e) => {
-    var output = this.state.Orders.filter(
-      (order) => order.OrderType == this.state.term
-    );
-
-    this.setState({
-      dispOrders: output,
-    });
-  };
-
   render() {
-    let navLogin = null;
-    let redirectVar = null;
-
-    navLogin = (
-      <ul className="nav navbar-nav navbar-right">
-        <li>
-          <Link to="/login">
-            <span className="glyphicon glyphicon-log-in"></span> Login
-          </Link>
-        </li>
-      </ul>
-    );
-
-
     let eventsdisp = null;
     eventsdisp = this.state.dispOrders.map((eve) => {
       console.log(eve.RestaurantEmail);

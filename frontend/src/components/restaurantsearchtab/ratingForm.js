@@ -5,8 +5,8 @@ import cookie from "react-cookies";
 import axios from "axios";
 
 import "bootstrap/dist/css/bootstrap.min.css";
-import { Card, Form, Row, FormGroup, FormLabel, Button } from "react-bootstrap";
-
+import { Form, Row, Button } from "react-bootstrap";
+import { backendURL } from "../../config";
 class RatingReview extends Component {
   constructor(props) {
     super(props);
@@ -38,8 +38,11 @@ class RatingReview extends Component {
       customer: this.state.customer,
       restaurant: this.state.restaurant,
     };
+    axios.defaults.headers.common["authorization"] = localStorage.getItem(
+      "token"
+    );
     axios
-      .post("http://localhost:3001/ratingreview", data)
+      .post(backendURL+"/customer/restaurantRatingsAdd", data)
 
       .then((response) => {
         //update the state with the response data

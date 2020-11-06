@@ -1,35 +1,32 @@
 import React, { Component } from "react";
-
-import "bootstrap/dist/css/bootstrap.min.css";
-import CustomerHome from "./CustomerHome";
-import RestaurantHome from "./RestaurantHome";
 import { Redirect } from "react-router";
+import "bootstrap/dist/css/bootstrap.min.css";
+import Userevents from "./userEvent";
+import Restaurantevents from "./restaurantEvent";
 import Navbar2 from "../navbar/UserNavbar";
 import Navbar3 from "../navbar/RestaurantNavbar"
-class Home extends Component {
+class Events extends Component {
   render() {
     //iterate over books to create a table row
 
-    console.log(localStorage.getItem("userrole"));
+    //if not logged in go to login page
     if (localStorage.getItem("userrole") === "Customer") {
       return( <>
       <Navbar2></Navbar2>
-      <CustomerHome></CustomerHome>
+      <Userevents></Userevents>
         </>
         );
     } else if (localStorage.getItem("userrole") === "Restaurant") {
       return( <>
         <Navbar3></Navbar3>
-        <RestaurantHome></RestaurantHome>
+        <Restaurantevents></Restaurantevents>
           </>
           );
     } else {
       return <Redirect to="/login" />;
     }
-
   }
-  
 }
 
 //export Home Component
-export default Home;
+export default Events;

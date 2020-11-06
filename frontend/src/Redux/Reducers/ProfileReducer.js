@@ -1,7 +1,6 @@
-import { profile, } from "../constants/actiontypes";
+import { profile } from "../constants/actiontypes";
 const defaultState = {
-  profileinfo: {
-  },
+  profileinfo: {},
 };
 const studentprofilereducer = (state = defaultState, action) => {
   switch (action.type) {

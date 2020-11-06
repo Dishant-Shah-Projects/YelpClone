@@ -1,70 +1,45 @@
 import React, { Component } from "react";
 import "../../App.css";
-import {
-  Container,
-  Card,
-  Row,
-  Col,
-  Button,
-  Form,
-  FormControl,
-} from "react-bootstrap";
+import { Container, Card } from "react-bootstrap";
 import cookie from "react-cookies";
-import { Link } from "react-router-dom";
-import { Redirect } from "react-router";
 import axios from "axios";
-import Setups from "./setup";
-import $ from "jquery";
-import Popper from "popper.js";
+import Setups from "./eventSetup";
 import "bootstrap/dist/js/bootstrap.bundle.min";
 import "bootstrap/dist/css/bootstrap.min.css";
-
-import Peopleevent from "./eventpeople";
+import { backendURL } from "../../config";
+import Peopleevent from "./eventPeople";
 class Restaurantevents extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      user: cookie.load("user"),
-      Events: [],
+      ID: cookie.load("user"),
       dispEvents: [],
       term: "",
     };
   }
   componentDidMount() {
     console.log(this.state.user);
-    const data = {
-      username: this.state.user,
-    };
-    axios
-      .get("http://localhost:3001/restaurantevents")
 
+    axios.defaults.headers.common["authorization"] = localStorage.getItem(
+      "token"
+    );
+    axios
+      .get(backendURL + "/customer/profile", {
+        params: {
+          restaurantID: this.state.ID,
+        },
+        withCredentials: true,
+      })
       .then((response) => {
         //update the state with the response data
         console.log(response.data);
         this.setState({
-          Events: response.data,
           dispEvents: response.data,
         });
       });
   }
 
   render() {
-    let navLogin = null;
-    let redirectVar = null;
-
-    navLogin = (
-      <ul className="nav navbar-nav navbar-right">
-        <li>
-          <Link to="/login">
-            <span className="glyphicon glyphicon-log-in"></span> Login
-          </Link>
-        </li>
-      </ul>
-    );
-    if (!cookie.load("user")) {
-      console.log(cookie.load("user"));
-      return (redirectVar = <Redirect to="/login" />);
-    }
     console.log(this.state.Events);
     let eventsdisp = null;
     eventsdisp = this.state.dispEvents.map((eve) => {

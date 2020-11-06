@@ -2,20 +2,11 @@ import React, { Component } from "react";
 import "../../App.css";
 // import cookie from 'react-cookies';
 import axios from "axios";
-import { Redirect } from "react-router";
 
 import "bootstrap/dist/css/bootstrap.min.css";
-import {
-  Card,
-  Form,
-  Row,
-  FormGroup,
-  FormLabel,
-  Button,
-  Image,
-} from "react-bootstrap";
+import { Form, Button } from "react-bootstrap";
 import cookie from "react-cookies";
-
+import { backendURL } from "../../config";
 class ProfileUpdate extends Component {
   constructor(ownprops) {
     super(ownprops);
@@ -24,7 +15,7 @@ class ProfileUpdate extends Component {
       thingsilove: "",
       yelpingsince: "",
       err: "",
-      userEmail: cookie.load("user"),
+      userEmail: localStorage.getItem("userId"),
 
       authFlag: false,
     };
@@ -39,10 +30,6 @@ class ProfileUpdate extends Component {
     this.setState({
       authFlag: false,
     });
-    var headers = new Headers();
-    const data = {
-      userEmail: this.state.userEmail,
-    };
   }
 
   findmeinChangeHandler = (e) => {
@@ -62,14 +49,13 @@ class ProfileUpdate extends Component {
   };
 
   submit = (e) => {
-    var headers = new Headers();
     //prevent page from refresh
     e.preventDefault();
     const data = {
-      userEmail: this.state.userEmail,
-      yelpingsince: this.state.yelpingsince,
-      thingsilove: this.state.thingsilove,
-      findmein: this.state.findmein,
+      customerID: this.state.userEmail,
+      AboutMe: this.state.yelpingsince,
+      ThingsILove: this.state.thingsilove,
+      Findme: this.state.findmein,
     };
 
     console.log(this.state);
@@ -77,7 +63,10 @@ class ProfileUpdate extends Component {
     //set the with credentials to true
     axios.defaults.withCredentials = true;
     //make a post request with the user data
-    axios.post("http://localhost:3001/aboutupdate", data).then((response) => {
+    axios.defaults.headers.common["authorization"] = localStorage.getItem(
+      "token"
+    );
+    axios.post(backendURL+"/customer/profileAbout", data).then((response) => {
       console.log("Status Code : ", response.status);
       if (response.status === 200) {
         this.setState({

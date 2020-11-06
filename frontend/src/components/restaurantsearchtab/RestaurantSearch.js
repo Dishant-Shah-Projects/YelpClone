@@ -1,27 +1,9 @@
 import React, { Component } from "react";
 
-import {
-  Container,
-  Card,
-  Row,
-  Col,
-  Button,
-  Form,
-  FormControl,
-  Jumbotron,
-  Image,
-  ListGroup,
-  ListGroupItem,
-} from "react-bootstrap";
-import cookie from "react-cookies";
-
-import axios from "axios";
-
-import $ from "jquery";
-import Popper from "popper.js";
 import "bootstrap/dist/js/bootstrap.bundle.min";
 import "bootstrap/dist/css/bootstrap.min.css";
 import { Map, GoogleApiWrapper, Marker } from "google-maps-react";
+
 export class MapContainer extends Component {
   constructor(props) {
     super(props);
@@ -52,7 +34,7 @@ export class MapContainer extends Component {
     }
   };
   componentDidUpdate(prevProps) {
-    if (prevProps.rest != this.props.rest) {
+    if (prevProps.rest !== this.props.rest) {
       this.setState({
         stores: this.props.rest,
       });

@@ -1,13 +1,10 @@
-import React, { Component, useReducer } from "react";
+import React, { Component } from "react";
 
 import {
   Container,
   Card,
   Row,
   Col,
-  Button,
-  Form,
-  FormControl,
   ListGroup,
   ListGroupItem,
   Image,
@@ -17,14 +14,13 @@ import {
 } from "react-bootstrap";
 import cookie from "react-cookies";
 import { Link } from "react-router-dom";
-import { Redirect } from "react-router";
 import axios from "axios";
-
-import $ from "jquery";
-import Popper from "popper.js";
+import Navbar2 from "../navbar/UserNavbar";
+import Navbar3 from "../navbar/RestaurantNavbar"
 import "bootstrap/dist/js/bootstrap.bundle.min";
 import "bootstrap/dist/css/bootstrap.min.css";
 import download from "./download.png";
+import { backendURL } from "../../config";
 
 class Userpage extends Component {
   constructor(props) {
@@ -44,8 +40,11 @@ class Userpage extends Component {
     const data = {
       username: this.state.customer,
     };
+    axios.defaults.headers.common["authorization"] = localStorage.getItem(
+      "token"
+    );
     axios
-      .post("http://localhost:3001/customerprofile", data)
+      .post(backendURL+"/customerprofile", data)
 
       .then((response) => {
         //update the state with the response data

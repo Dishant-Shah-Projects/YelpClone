@@ -17,7 +17,7 @@ import {
   FormControl,
   ListGroup,
 } from "react-bootstrap";
-class RestaurantMaps extends Component {
+class userSearchTab extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -74,7 +74,7 @@ class RestaurantMaps extends Component {
       searchcolumn: this.state.searchcolumn,
     };
     axios
-      .post("http://localhost:3001/restaurantsearch", data)
+      .post(backendURL+"/restaurantsearch", data)
 
       .then((response) => {
         //update the state with the response data
@@ -149,4 +149,4 @@ class RestaurantMaps extends Component {
 }
 
 //export Home Component
-export default RestaurantMaps;
+export default userSearchTab;

@@ -1,13 +1,10 @@
 import React, { Component } from "react";
 import "../../App.css";
 
-import cookie from "react-cookies";
-import { Link } from "react-router-dom";
-import { Redirect } from "react-router";
 import axios from "axios";
-import { Form, Row, Col, Button, Container } from "react-bootstrap";
+import { Button, Container } from "react-bootstrap";
 import "bootstrap/dist/css/bootstrap.min.css";
-
+import { backendURL } from "../../config";
 class Regevent extends Component {
   constructor(props) {
     super(props);
@@ -28,7 +25,7 @@ class Regevent extends Component {
       EventName: this.state.EventName,
     };
     axios
-      .post("http://localhost:3001/register", data)
+      .post(backendURL+"/register", data)
 
       .then((response) => {
         //update the state with the response data

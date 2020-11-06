@@ -1,18 +1,10 @@
 import React, { Component } from "react";
-import Rating from "react-rating";
 
 import axios from "axios";
 import "bootstrap/dist/css/bootstrap.min.css";
-import {
-  Card,
-  Form,
-  Row,
-  FormGroup,
-  FormLabel,
-  Button,
-  Image,
-} from "react-bootstrap";
+import { Card, Form, Row, Button } from "react-bootstrap";
 import cookie from "react-cookies";
+import { backendURL } from "../../config";
 class RestaurantPickUpload extends Component {
   constructor(props) {
     super(props);
@@ -37,8 +29,11 @@ class RestaurantPickUpload extends Component {
       this.state.selectedFile.name
     );
     formData.append("restaurant", this.state.restaurant);
+    axios.defaults.headers.common["authorization"] = localStorage.getItem(
+      "token"
+    );
     axios
-      .post("http://localhost:3001/profilepictureupload", formData)
+      .post(backendURL+"/profilepictureupload", formData)
 
       .then((response) => {
         //update the state with the response data

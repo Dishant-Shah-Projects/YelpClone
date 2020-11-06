@@ -1,22 +1,7 @@
 import React, { Component } from "react";
-import { Link } from "react-router-dom";
-import cookie from "react-cookies";
-import { Redirect } from "react-router";
-import {
-  Navbar,
-  NavDropdown,
-  Nav,
-  FormControl,
-  Button,
-  Form,
-  Container,
-  Card,
-  FormGroup,
-  Row,
-  Col,
-} from "react-bootstrap";
+
+import { Button, Form, Card, Row, Col } from "react-bootstrap";
 import "bootstrap/dist/css/bootstrap.min.css";
-import axios from "axios";
 
 class Menuitem extends Component {
   constructor(props) {

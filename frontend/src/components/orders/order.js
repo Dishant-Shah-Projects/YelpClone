@@ -1,20 +1,9 @@
 import React, { Component } from "react";
 import "../../App.css";
-
-import cookie from "react-cookies";
-import { Link } from "react-router-dom";
-import { Redirect } from "react-router";
 import axios from "axios";
-import {
-  Form,
-  Row,
-  Col,
-  Button,
-  Container,
-  Accordion,
-  Table,
-} from "react-bootstrap";
+import { Button, Container, Accordion, Table } from "react-bootstrap";
 import "bootstrap/dist/css/bootstrap.min.css";
+import { backendURL } from "../../config";
 // Order component for User
 class Order extends Component {
   constructor(props) {
@@ -30,18 +19,6 @@ class Order extends Component {
       OrderNo: this.state.Orderinfo.OrderNo,
     };
     console.log(data);
-    axios
-      .post("http://localhost:3001/itemuserorders", data)
-
-      .then((response) => {
-        //update the state with the response data
-        console.log(response.data);
-        console.log("Status Code : ", response.status);
-
-        this.setState({
-          Orderitems: response.data,
-        });
-      });
   }
 
   render() {

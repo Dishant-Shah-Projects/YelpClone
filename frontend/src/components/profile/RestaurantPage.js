@@ -5,11 +5,7 @@ import {
   Card,
   Row,
   Col,
-  Button,
-  Form,
-  FormControl,
   Jumbotron,
-  Image,
   ListGroup,
   ListGroupItem,
   Tab,
@@ -19,13 +15,13 @@ import cookie from "react-cookies";
 
 import axios from "axios";
 import Reviews from "../restaurantsearchtab/reviews";
-import $ from "jquery";
-import Popper from "popper.js";
+
 import "bootstrap/dist/js/bootstrap.bundle.min";
 import "bootstrap/dist/css/bootstrap.min.css";
-import download from "./download.png";
-import RatingReview from "../restaurantsearchtab/ratingreview";
+import RatingReview from "../restaurantsearchtab/ratingForm";
 import Menu from "../restaurant/menu";
+import Navbar2 from "../navbar/UserNavbar";
+import { backendURL } from "../../config";
 class RestaurantPage extends Component {
   constructor(props) {
     console.log(props.match.params);
@@ -41,8 +37,11 @@ class RestaurantPage extends Component {
     const data = {
       Restaurant: this.state.Restaurant,
     };
+    axios.defaults.headers.common["authorization"] = localStorage.getItem(
+      "token"
+    );
     axios
-      .post("http://localhost:3001/restaurant", data)
+      .post(backendURL+"/restaurant", data)
 
       .then((response) => {
         //update the state with the response data
@@ -61,6 +60,8 @@ class RestaurantPage extends Component {
     if (this.state.loaded) {
       console.log(this.state.Restinfo[0].RestaurantCusine);
       display = (
+        <>
+        <Navbar2></Navbar2>
         <Container>
           <Jumbotron fluid>
             <Container>
@@ -120,6 +121,7 @@ class RestaurantPage extends Component {
             </Row>
           </Tab.Container>
         </Container>
+        </>
       );
     }
     console.log(outlook);
