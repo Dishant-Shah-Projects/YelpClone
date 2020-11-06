@@ -28,11 +28,11 @@ class ROrder extends Component {
   };
   handleupdate = (e) => {
     const data2 = {
-      OrderNo: this.state.Orderinfo.OrderNo,
+      orderID: this.state.Orderinfo.orderID,
       OrderStatus: this.state.Orderstate,
     };
     axios
-      .post(backendURL+"/updateorderstatus", data2)
+      .post(backendURL+"/restaurant/orderUpdate", data2)
 
       .then((response) => {
         //update the state with the response data
@@ -46,15 +46,15 @@ class ROrder extends Component {
     console.log(this.state.Orderitems);
     console.log(this.state.Orderinfo.OrderNo);
     var total = 0;
-    if (this.state.Orderitems) {
+    if (this.state.Orderinfo.Items.length!==0) {
       Output = this.state.Orderitems.map((eve) => {
-        total = total + eve.ItemCost;
+        total = total + eve.DishPrice;
         return (
           <React.Fragment>
             <tr>
-              <td>{eve.ItemName}</td>
-              <td>{eve.ItemAmt}</td>
-              <td>{eve.ItemCost}</td>
+              <td>{eve.DishName}</td>
+              <td>{eve.DishQuantity}</td>
+              <td>{eve.DishPrice}</td>
             </tr>
           </React.Fragment>
         );

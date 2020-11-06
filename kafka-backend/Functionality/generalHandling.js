@@ -21,67 +21,81 @@ async function handle_request(msg, callback) {
           FirstName, LastName, UserName, Password, Role, location,
         } = msg.body;
         if (Role === 'Restaurant') {
-          let lat = null;
-          let lng = null;
-          const data = await axios.get('https://maps.googleapis.com/maps/api/geocode/json', {
-            params: {
-              address: location,
-              key: 'AIzaSyBej0Pq1ieVvLjN9gq-ic0_GL81LytLEH4',
-            },
-          });
-          lat = data.data.results[0].geometry.location.lat;
-          lng = data.data.results[0].geometry.location.lng;
-          const restaurantID = await Restaurant.findOne().sort('-restaurantID');
-          const newID = restaurantID.restaurantID + 1;
-          const hashedPassword = await bcrypt.hash(Password, 10);
-          const restaurant = new Restaurant({
-            restaurantID: newID,
-            UserName,
-            Name: FirstName,
-            Password: hashedPassword,
-            Location: msg.body.Location,
-            Lat: lat,
-            Long: lng,
-          });
-          restaurant.save((e, _data) => {
-            if (e) {
-              console.log(e);
-              res.status = 500;
-              res.end = 'Network Error';
-              callback(null, res);
-            } else {
-              res.status = 201;
-              res.end = 'ProfileCreated';
-              callback(null, res);
-            }
-          });
+          const exist = await Restaurant.findOne({ UserName });
+          if (exist) {
+            res.status = 400;
+            res.end = 'Username already exists';
+            callback(null, res);
+          } else {
+            let lat = null;
+            let lng = null;
+            const data = await axios.get('https://maps.googleapis.com/maps/api/geocode/json', {
+              params: {
+                address: location,
+                key: 'AIzaSyBej0Pq1ieVvLjN9gq-ic0_GL81LytLEH4',
+              },
+            });
+            lat = data.data.results[0].geometry.location.lat;
+            lng = data.data.results[0].geometry.location.lng;
+            const restaurantID = await Restaurant.findOne().sort('-restaurantID');
+            const newID = restaurantID.restaurantID + 1;
+            const hashedPassword = await bcrypt.hash(Password, 10);
+            const restaurant = new Restaurant({
+              restaurantID: newID,
+              UserName,
+              Name: FirstName,
+              Password: hashedPassword,
+              Location: msg.body.Location,
+              Lat: lat,
+              Long: lng,
+            });
+            restaurant.save((e, _data) => {
+              if (e) {
+                console.log(e);
+                res.status = 500;
+                res.end = 'Network Error';
+                callback(null, res);
+              } else {
+                res.status = 201;
+                res.end = 'ProfileCreated';
+                callback(null, res);
+              }
+            });
+          }
         } else {
-          const customer = await Customer.findOne().sort('-customerID');
-          const newID = customer.customerID + 1;
-          console.log(customer);
-          const hashedPassword = await bcrypt.hash(Password, 10);
-          const custom = new Customer({
-            customerID: newID,
-            UserName,
-            FirstName,
-            LastName,
-            Password: hashedPassword,
+          const exist = await Customer.findOne({ UserName });
+          if (exist !== null) {
+            res.status = 400;
+            res.end = 'Username already exists';
+            callback(null, res);
+          } else {
+            const customer = await Customer.findOne().sort('-customerID');
+            const newID = customer.customerID + 1;
+            const hashedPassword = await bcrypt.hash(Password, 10);
+            const custom = new Customer({
+              customerID: newID,
+              UserName,
+              FirstName,
+              LastName,
+              Password: hashedPassword,
 
-          });
-          custom.save((e, data) => {
-            if (e) {
-              console.log(e);
-              res.status = 500;
-              res.end = 'Network Error';
-              callback(null, res);
-            } else {
-              res.status = 201;
-              res.end = 'ProfileCreated';
-              callback(null, res);
-            }
-          });
+            });
+            custom.save((e, data) => {
+              if (e) {
+                console.log(e);
+                res.status = 500;
+                res.end = 'Network Error';
+                callback(null, res);
+              } else {
+                res.status = 201;
+                res.end = 'ProfileCreated';
+                callback(null, res);
+              }
+            });
+          }
         }
-      } catch {
+      } catch (err) {
+        console.log(err);
         res.status = 500;
         res.end = 'Network Error';
         callback(null, res);

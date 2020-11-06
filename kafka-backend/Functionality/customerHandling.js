@@ -115,7 +115,7 @@ async function handle_request(msg, callback) {
         const orderID = 1 + eventslist.length;
         // eslint-disable-next-line new-cap
         const newevent = new order({
-          orderID, ...msg.body, OrderDateTime: Date.now(),
+          orderID, ...msg.body, OrderDateTime: Date.now(), OrderStatus:"Order Received",
         });
         newevent.save((err, results) => {
           if (err) {
@@ -303,10 +303,12 @@ async function handle_request(msg, callback) {
       const res = {};
       try {
         const {
-          CustomerID, Sorted, Registered,
+          CustomerID, Sorted, Registered, SearchString,
         } = msg.body;
         let eventlist = null;
-        if ((Sorted) && (Registered)) {
+        if (SearchString !== '') {
+          eventlist = await events.find({ EventName: { $regex: `.*${SearchString}.*` } }).sort({ Date: 'descending' });
+        } else if ((Sorted) && (Registered)) {
           eventlist = await events.find({ 'PeopleRegistered.CustomerID': CustomerID, Date: { $gt: Date.now() } }).sort({ Date: 'descending' });
         } else if (Sorted) {
           eventlist = await events.find({ Date: { $gt: Date.now() } }).sort({ Date: 'descending' });

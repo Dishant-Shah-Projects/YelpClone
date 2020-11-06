@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import { Redirect } from "react-router";
 import "bootstrap/dist/css/bootstrap.min.css";
-import Userevents from "./userEvent";
+import Userevents from "./customerEvent";
 import Restaurantevents from "./restaurantEvent";
 import Navbar2 from "../navbar/UserNavbar";
 import Navbar3 from "../navbar/RestaurantNavbar"

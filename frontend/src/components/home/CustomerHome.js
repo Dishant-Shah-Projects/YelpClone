@@ -47,6 +47,8 @@ class CustomerHome extends Component {
         //update the state with the response data
         console.log(response);
         console.log(response.status);
+        let userInfo =response.data;
+        this.props.profile(userInfo);
         this.setState({
           userinfo: response.data,
         });

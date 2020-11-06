@@ -1,9 +1,10 @@
 import { combineReducers } from "redux";
 import LoginReducer from "../Reducers/LoginReducer";
-import studentprofilereducer from "../Reducers/ProfileReducer";
-
+import profilereducer from "../Reducers/ProfileReducer";
+import orderReducer from"../Reducers/menureducer";
 const finalReducers = combineReducers({
   LoginReducer: LoginReducer,
-  studentprofilereducer: studentprofilereducer,
+  profilereducer: profilereducer,
+  orderReducer:orderReducer,
 });
 export default finalReducers;

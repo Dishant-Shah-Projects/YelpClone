@@ -1,10 +1,11 @@
 export const login = "LOGIN";
-export const profile = "PROFILE";
+export const profile = "PROFILELOAD";
 export const profileupdate = "PROFILEUPDATE";
 export const companyprofile = "COMPANYPROFILE";
 export const companyprofileupdate = "COMPANYPROFILEUPDATE";
-export const ORDERSTATUS = "ORDERUPDATE";
-export const ORDERUPDATE = "ORDERSTATUSUPDATE";
+export const order = "ORDER";
+export const orderupdate = "ORDERUPDATE";
+export const addorder="PLACEORDER";
 export const ORDERS = "ORDERS";
 export const EVENTSPOST = "EVENT";
 export const EVENTS = "EVENTS";

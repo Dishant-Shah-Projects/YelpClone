@@ -14,27 +14,20 @@ class Order extends Component {
     };
     console.log(this.state);
   }
-  componentDidMount() {
-    const data = {
-      OrderNo: this.state.Orderinfo.OrderNo,
-    };
-    console.log(data);
-  }
 
   render() {
     var Output = null;
     console.log(this.state.Orderitems);
     var total = 0;
-    if (this.state.Orderitems) {
-      console.log(this.state.Orderitems);
-      Output = this.state.Orderitems.map((eve) => {
-        total = total + eve.ItemCost;
+    if (this.state.Orderinfo.Items.length!==0) {
+      Output = this.state.Orderitems.Items.map((eve) => {
+        total = total + eve.DishPrice;
         return (
           <React.Fragment>
             <tr>
-              <td>{eve.ItemName}</td>
-              <td>{eve.ItemAmt}</td>
-              <td>{eve.ItemCost}</td>
+              <td>{eve.DishName}</td>
+              <td>{eve.DishQuantity}</td>
+              <td>{eve.DishPrice}</td>
             </tr>
           </React.Fragment>
         );

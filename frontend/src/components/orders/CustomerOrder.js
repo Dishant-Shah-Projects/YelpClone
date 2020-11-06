@@ -1,33 +1,41 @@
 import React, { Component } from "react";
 import "../../App.css";
-import { Container, Card, Row, Col, Button, Form } from "react-bootstrap";
+import { Container, Card, Row, Col, Button, Form ,Pagination} from "react-bootstrap";
 import cookie from "react-cookies";
 import axios from "axios";
 import "bootstrap/dist/js/bootstrap.bundle.min";
 import "bootstrap/dist/css/bootstrap.min.css";
 import Order from "./order";
 import { backendURL } from "../../config";
+import { connect } from "react-redux";
+import { profile } from "../../Redux/constants/actiontypes";
 // Orders page for users
 class UserOrders extends Component {
-  constructor(props) {
-    super(props);
+  constructor(ownprops) {
+    super(ownprops);
     this.state = {
-      user: cookie.load("user"),
+      user: ownprops.userInfo,
       Orders: [],
       dispOrders: [],
-      term: "",
-      term2: "",
+      Sorted:false,
+      Filtered:false,
+      PageNo:0,
+      Pages:0,
+      OrderStatus:" Order Received",
     };
-    this.updateterm = this.updateterm.bind(this);
+    this.updateterm2 = this.updateterm2.bind(this);
+    this.handleupcoming = this.handleupcoming.bind(this);
+    this.paginate = this.paginate.bind(this);
   }
   componentDidMount() {
     console.log(this.state.user);
     const data = {
-      customerID: this.state.user,
+      customerID: this.state.user.ID,
       OrderStatus:"",
-      Sorted:"",
-      Filtered:"",
-      PageNo:"",
+      Sorted:this.state.Sorted,
+      Filtered:this.state.Filtered,
+      PageNo:0,
+      OrderStatus:this.state.OrderStatus,
     };
     axios.defaults.headers.common["authorization"] = localStorage.getItem(
       "token"
@@ -44,35 +52,92 @@ class UserOrders extends Component {
         });
       });
   }
-  updateterm = (e) => {
-    this.setState({
-      term: e.target.value,
-    });
-  };
   updateterm2 = (e) => {
     this.setState({
       term2: e.target.value,
     });
   };
+  handleupcoming = (e) => {
+    console.log(e);
+    e.preventDefault();
+    console.log(this.state.user);
+    if(this.state.Sorted){
+      this.setState({
+        Sorted:false,
+        PageNo:0,
+      })
+    }
+    else{
+      this.setState({
+        Sorted:false,
+        PageNo:0,
+      })
+    }
+    console.log(this.state.user);
+    const data = {
+      customerID: this.state.user.ID,
+      OrderStatus:"",
+      Sorted:this.state.Sorted,
+      Filtered:this.state.Filtered,
+      PageNo:0,
+      OrderStatus:this.state.OrderStatus,
+    };
+    axios.defaults.headers.common["authorization"] = localStorage.getItem(
+      "token"
+    );
+    axios
+      .post(backendURL+"/customer/orders", data)
 
-  updateterm = (e) => {
-    this.setState({
-      term: e.target.value,
-    });
+      .then((response) => {
+        //update the state with the response data
+        console.log(response.data);
+        this.setState({
+          Orders: response.data,
+          dispOrders: response.data,
+        });
+      });
   };
+  paginate = (e) => {
+    e.preventDefault();
+    const data = {
+      customerID: this.state.user.ID,
+      OrderStatus:"",
+      Sorted:this.state.Sorted,
+      Filtered:this.state.Filtered,
+      PageNo:e, 
+      OrderStatus:this.state.OrderStatus,
+    };
+    axios.defaults.headers.common["authorization"] = localStorage.getItem(
+      "token"
+    );
+    axios
+      .post(backendURL+"/customer/orders",data)
+
+      .then((response) => {
+        //update the state with the response data
+        console.log(response.data);
+        this.setState({
+          Events: response.data,
+          dispEvents: response.data,
+          Pages:response.data[0],
+        });
+      });
+
+  }
 
   render() {
     let eventsdisp = null;
-    eventsdisp = this.state.dispOrders.map((eve) => {
-      console.log(eve.RestaurantEmail);
+    console.log(this.state.dispOrders[1]);
+    if(this.state.dispOrders[1]){
+    eventsdisp = this.state.dispOrders[1].map((eve) => {
       return (
         <React.Fragment>
           <Card>
-            <Card.Title>Restaurant Name: {eve.RestaurantName}</Card.Title>
+            <Card.Title>Restaurant Name: {eve.restaurantName}</Card.Title>
             <Card.Body>
               <a>Order Status: {eve.OrderStatus}</a>
               <br />
-              <a>Order Time: {eve.OrderTime}</a>
+              <a>Order Time: {eve.OrderDateTime}</a>
             </Card.Body>
 
             <Order Orderinfo={eve} />
@@ -80,24 +145,28 @@ class UserOrders extends Component {
         </React.Fragment>
       );
     });
-
+  }
+  console.log(this.state.Pages);
+console.log(this.state.PageNo);
+// let items = [];
+// for (let number = 0; number <= this.state.Pages; number++) {
+//   items.push(
+//     <Pagination.Item key={number} active={number === this.state.PageNo}onClick={this.paginate(number)}>
+//       {number}
+//     </Pagination.Item>,
+//   );
+// }
     return (
       <Container>
         <h1>Orders</h1>
         <Row>
           <Col>
             <Form inline>
-              <Form.Label>Order Type</Form.Label>
-              <Form.Control as="select" required onChange={this.updateterm}>
-                <option value="Delivery">delivery</option>
-                <option value="Pickup">pickup</option>
-              </Form.Control>
               <Button
-                onClick={this.handleupsearch}
+                onClick={this.handleSort}
                 variant="outline-success"
-                onClick={this.handleupsearch}
               >
-                Search
+                Change Sort
               </Button>
             </Form>
           </Col>
@@ -118,10 +187,31 @@ class UserOrders extends Component {
             </Form>
           </Col>
         </Row>
-
+        <Pagination></Pagination>
         {eventsdisp}
       </Container>
     );
   }
 }
-export default UserOrders;
+//export Home Component
+const mapStateToProps = (state, ownprops) => {
+  console.log(state.LoginReducer.userInfo);
+  const userInfo = state.LoginReducer.userInfo;
+  return {
+    userInfo: userInfo,
+  };
+};
+
+const mapDispatchToProps = (dispatch) => {
+  return {
+    profile: (payload) => {
+      dispatch({
+        type: profile,
+        payload,
+      });
+    },
+  };
+};
+
+//export Login Component
+export default connect(mapStateToProps, mapDispatchToProps)(UserOrders);

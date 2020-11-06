@@ -5,8 +5,10 @@ import axios from "axios";
 
 import "bootstrap/dist/css/bootstrap.min.css";
 import { Form, Button } from "react-bootstrap";
-import cookie from "react-cookies";
+import { profileupdate } from "../../Redux/constants/actiontypes";
+import { connect } from "react-redux";
 import { backendURL } from "../../config";
+
 class ProfileUpdate extends Component {
   constructor(ownprops) {
     super(ownprops);
@@ -72,6 +74,8 @@ class ProfileUpdate extends Component {
         this.setState({
           authFlag: true,
         });
+        let userInfo =data;
+        this.props.profileupdate(userInfo);
       } else {
         this.setState({
           authFlag: false,
@@ -114,4 +118,24 @@ class ProfileUpdate extends Component {
   }
 }
 
-export default ProfileUpdate;
+const mapStateToProps = (state, ownprops) => {
+  console.log(state.LoginReducer.userInfo);
+  const userInfo = state.LoginReducer.userInfo;
+  return {
+    userInfo: userInfo,
+  };
+};
+
+const mapDispatchToProps = (dispatch) => {
+  return {
+    profileupdate: (payload) => {
+      dispatch({
+        type: profileupdate,
+        payload,
+      });
+    },
+  };
+};
+
+//export Login Component
+export default connect(mapStateToProps, mapDispatchToProps)(ProfileUpdate);

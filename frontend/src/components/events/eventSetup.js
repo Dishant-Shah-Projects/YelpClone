@@ -11,7 +11,7 @@ class Setups extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      user: cookie.load("user"),
+      user: localStorage.getItem("userId"),
       EventName: "",
       EventDescription: "",
       EventTime: "",

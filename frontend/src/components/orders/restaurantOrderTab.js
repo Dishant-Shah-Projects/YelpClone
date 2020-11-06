@@ -33,7 +33,7 @@ class RestaurantOrder extends Component {
       "token"
     );
     axios
-      .post(backendURL+"/restorders", data)
+      .post(backendURL+"/restaurant/orders", data)
 
       .then((response) => {
         //update the state with the response data
@@ -76,16 +76,16 @@ class RestaurantOrder extends Component {
 
   render() {
     let eventsdisp = null;
-    eventsdisp = this.state.dispOrders.map((eve) => {
+    eventsdisp = this.state.dispOrders[1].map((eve) => {
       console.log(eve.RestaurantEmail);
       return (
         <React.Fragment>
           <Card>
-            <Card.Title>Customer: {eve.User_name}</Card.Title>
+            <Card.Title>Customer: {eve.restaurantName}</Card.Title>
             <Card.Body>
               <a>Order Status: {eve.OrderStatus}</a>
               <br />
-              <a>Order Time: {eve.OrderTime}</a>
+              <a>Order Time: {eve.OrderDateTime}</a>
             </Card.Body>
 
             <ROrder orderinfo={eve} />
