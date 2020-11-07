@@ -51,19 +51,10 @@ class RestHome extends Component {
       });
   }
   render() {
-    //iterate over books to create a table row
-
-    //if not logged in go to login page
-    let redirectVar = null;
-    if (!cookie.load("user")) {
-      console.log(cookie.load("user"));
-      return (redirectVar = <Redirect to="/userlogin" />);
-    }
-    console.log(cookie.load("user"));
 
     return (
       <React.Fragment>
-        <div>{redirectVar}</div>
+        <div></div>
         <Container>
           <Jumbotron fluid>
             <Container>
@@ -72,20 +63,20 @@ class RestHome extends Component {
                   <Card>
                     <Card.Title>
                       {" "}
-                      {this.state.restinfo.RestaurantName}
+                      {this.state.restinfo.Name}
                     </Card.Title>
-                    <a> {this.state.restinfo.RestaurantCusine}</a>
-                    <a> {this.state.restinfo.RestaurantDescription}</a>
-                    <a>{this.state.restinfo.RestaurantLocation}</a>
-                    <a>Hours: {this.state.restinfo.RestaurantHours}</a>
+                    <a> {this.state.restinfo.Cusine}</a>
+                    <a> {this.state.restinfo.Description}</a>
+                    <a>{this.state.restinfo.Location}</a>
+                    <a>Hours: {this.state.restinfo.Hours}</a>
 
                     <ListGroup className="list-group-flush">
                       <ListGroupItem>
                         Phone Number:{" "}
-                        {this.state.restinfo.RestaurantPublicPhone}
+                        {this.state.restinfo.PhoneNo}
                       </ListGroupItem>
                       <ListGroupItem>
-                        Email: {this.state.restinfo.RestaurantPublicEmail}
+                        Email: {this.state.restinfo.ContactEmail}
                       </ListGroupItem>
                     </ListGroup>
                   </Card>
@@ -104,7 +95,7 @@ class RestHome extends Component {
                     <Nav.Link eventKey="second">Update Info</Nav.Link>
                   </Nav.Item>
                   <Nav.Item>
-                    <Nav.Link eventKey="third">Add Menu item</Nav.Link>
+                    <Nav.Link eventKey="third">profile Update</Nav.Link>
                   </Nav.Item>
                   <Nav.Item>
                     <Nav.Link eventKey="fourth">Add Menu item</Nav.Link>
@@ -114,7 +105,7 @@ class RestHome extends Component {
               <Col sm={9}>
                 <Tab.Content>
                   <Tab.Pane eventKey="first">
-                    <Reviews restaurant={this.state.restaurant}></Reviews>
+                    <Reviews restaurant={this.state.restinfo}></Reviews>
                   </Tab.Pane>
                   <Tab.Pane eventKey="second">
                     <RestaurantPickUpload></RestaurantPickUpload>

@@ -16,7 +16,7 @@ class ProfileUpdate3 extends Component {
       RestaurantPublicEmail: "",
       RestaurantPublicPhone: "",
       RestaurantHours: "",
-      RestaurantEmail: cookie.load("user"),
+      RestaurantEmail: localStorage.getItem("userId"),
       RestaurantLocation: null,
 
       authFlag: false,
@@ -91,14 +91,14 @@ class ProfileUpdate3 extends Component {
     //prevent page from refresh
     e.preventDefault();
     const data = {
-      RestaurantName: this.state.RestaurantName,
-      RestaurantCusine: this.state.RestaurantCusine,
-      RestaurantDescription: this.state.RestaurantDescription,
-      RestaurantPublicEmail: this.state.RestaurantPublicEmail,
-      RestaurantPublicPhone: this.state.RestaurantPublicPhone,
-      RestaurantHours: this.state.RestaurantHours,
-      RestaurantEmail: this.state.RestaurantEmail,
-      RestaurantLocation: this.state.RestaurantLocation,
+      Name: this.state.RestaurantName,
+      Cusine: this.state.RestaurantCusine,
+      Description: this.state.RestaurantDescription,
+      ContactEmail: this.state.RestaurantPublicEmail,
+      PhoneNo: this.state.RestaurantPublicPhone,
+      Hours: this.state.RestaurantHours,
+      restaurantID: this.state.RestaurantEmail,
+      Location: this.state.RestaurantLocation,
     };
 
     console.log(data);
@@ -107,7 +107,7 @@ class ProfileUpdate3 extends Component {
     axios.defaults.withCredentials = true;
     //make a post request with the user data
     axios
-      .post(backendURL+"/restaurantupdate", data)
+      .post(backendURL+"/restaurant/profileUpdate", data)
       .then((response) => {
         console.log("Status Code : ", response.status);
         if (response.status === 200) {

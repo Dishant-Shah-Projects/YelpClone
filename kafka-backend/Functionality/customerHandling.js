@@ -35,6 +35,30 @@ async function handle_request(msg, callback) {
       }
       break;
     }
+    case 'profilePictureUpdate': {
+      const res = {};
+      try {
+        const { customerID, ProfilePicURL } = msg.query;
+        Customer.findOneAndUpdate({ customerID }, {
+          ProfilePicURL,
+        }, (err, results) => {
+          if (err) {
+            res.status = 500;
+            res.end = 'Network Error';
+            callback(null, res);
+          } else {
+            res.status = 200;
+            res.end = JSON.stringify(results);
+            callback(null, res);
+          }
+        });
+      } catch {
+        res.status = 500;
+        res.end = 'Network Error';
+        callback(null, res);
+      }
+      break;
+    }
     case 'profileUpdate': {
       const res = {};
       try {
@@ -115,7 +139,7 @@ async function handle_request(msg, callback) {
         const orderID = 1 + eventslist.length;
         // eslint-disable-next-line new-cap
         const newevent = new order({
-          orderID, ...msg.body, OrderDateTime: Date.now(), OrderStatus:"Order Received",
+          orderID, ...msg.body, OrderDateTime: Date.now(), OrderStatus: 'Order Received',
         });
         newevent.save((err, results) => {
           if (err) {
@@ -248,16 +272,18 @@ async function handle_request(msg, callback) {
         const {
           customerID, OrderStatus, Sorted, Filtered, PageNo,
         } = msg.body;
+        console.log(msg.body);
         let eventlist = null;
         if ((Sorted) && (Filtered)) {
-          eventlist = await events.find({ customerID, OrderStatus }).sort({ Date: 'descending' });
+          eventlist = await order.find({ customerID, OrderStatus }).sort({ Date: 'descending' });
         } else if (Sorted) {
-          eventlist = await events.find({ customerID }).sort({ Date: 'descending' });
+          eventlist = await order.find({ customerID }).sort({ Date: 'descending' });
         } else if (Filtered) {
-          eventlist = await events.find({ customerID, OrderStatus }).sort({ Date: 'ascending' });
+          eventlist = await order.find({ customerID, OrderStatus }).sort({ Date: 'ascending' });
         } else {
-          eventlist = await events.find({ customerID }).sort({ Date: 'ascending' });
+          eventlist = await order.find({ customerID }).sort({ Date: 'ascending' });
         }
+        console.log(eventlist);
         if (eventlist) {
           const resultarray = [];
           const pages = Math.ceil(eventlist.length / 5);
@@ -445,7 +471,7 @@ async function handle_request(msg, callback) {
     case 'restaurantSearch': {
       const res = {};
       try {
-        const { PageNo, term, value } = msg.query;
+        const { term, value } = msg.query;
         let user = null;
         if (term === 'Menu') {
           user = await Restaurant.find({ Menu: { DishName: value } }).select('-Password');
@@ -457,12 +483,8 @@ async function handle_request(msg, callback) {
           user = await Restaurant.find({ PickMethod: value }).select('-Password');
         }
         if (user) {
-          const resultarray = [];
-          const pages = Math.ceil(user.length / 5);
-          resultarray.push(pages);
-          resultarray.push(user.slice(PageNo * 5, PageNo * 5 + 5));
           res.status = 200;
-          res.end = JSON.stringify(resultarray);
+          res.end = JSON.stringify(user);
           callback(null, res);
         } else {
           res.status = 500;

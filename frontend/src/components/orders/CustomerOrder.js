@@ -49,6 +49,7 @@ class UserOrders extends Component {
         this.setState({
           Orders: response.data,
           dispOrders: response.data,
+          Pages:response.data[0],
         });
       });
   }
@@ -94,17 +95,24 @@ class UserOrders extends Component {
         this.setState({
           Orders: response.data,
           dispOrders: response.data,
+          Pages:response.data[0],
         });
       });
   };
   paginate = (e) => {
     e.preventDefault();
+    console.log(e.target.text);
+    if (parseInt(e.target.text) !== this.state.PageNo) {
+      console.log(parseInt(e.target.text));
+      this.setState({
+        PageNo:parseInt(e.target.text)
+      });
     const data = {
       customerID: this.state.user.ID,
       OrderStatus:"",
       Sorted:this.state.Sorted,
       Filtered:this.state.Filtered,
-      PageNo:e, 
+      PageNo:parseInt(e.target.text), 
       OrderStatus:this.state.OrderStatus,
     };
     axios.defaults.headers.common["authorization"] = localStorage.getItem(
@@ -112,17 +120,17 @@ class UserOrders extends Component {
     );
     axios
       .post(backendURL+"/customer/orders",data)
-
       .then((response) => {
         //update the state with the response data
         console.log(response.data);
+        console.log(this.state);
         this.setState({
-          Events: response.data,
           dispEvents: response.data,
           Pages:response.data[0],
         });
+        console.log(this.state);
       });
-
+    }
   }
 
   render() {
@@ -146,19 +154,19 @@ class UserOrders extends Component {
       );
     });
   }
-  console.log(this.state.Pages);
-console.log(this.state.PageNo);
-// let items = [];
-// for (let number = 0; number <= this.state.Pages; number++) {
-//   items.push(
-//     <Pagination.Item key={number} active={number === this.state.PageNo}onClick={this.paginate(number)}>
-//       {number}
-//     </Pagination.Item>,
-//   );
-// }
+console.log(this.state.Pages);
+ console.log(this.state.PageNo);
+ let items = [];
+ for (let number = 0; number <= this.state.Pages; number++) {
+   items.push(
+     <Pagination.Item key={number} >
+       {number}
+     </Pagination.Item>,
+   );
+ }
     return (
       <Container>
-        <h1>Orders</h1>
+        <h1>Orders</h1> 
         <Row>
           <Col>
             <Form inline>
@@ -187,7 +195,7 @@ console.log(this.state.PageNo);
             </Form>
           </Col>
         </Row>
-        <Pagination></Pagination>
+        <Pagination onClick={this.paginate}>{items}</Pagination>
         {eventsdisp}
       </Container>
     );

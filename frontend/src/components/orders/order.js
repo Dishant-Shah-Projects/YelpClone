@@ -17,7 +17,6 @@ class Order extends Component {
 
   render() {
     var Output = null;
-    console.log(this.state.Orderitems);
     var total = 0;
     if (this.state.Orderinfo.Items.length!==0) {
       Output = this.state.Orderitems.Items.map((eve) => {

@@ -10,7 +10,7 @@ class AddMenu extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      RestaurantEmail: cookie.load("user"),
+      RestaurantEmail: localStorage.getItem("userId"),
       ItemName: "",
       ItemCost: "",
       ItemDesc: "",
@@ -71,16 +71,16 @@ class AddMenu extends Component {
     e.preventDefault();
     const formData = new FormData();
     formData.append(
-      "profileImage",
+      "food",
       this.state.Itemimg,
       this.state.Itemimg.name
     );
-    formData.append("RestaurantEmail", this.state.RestaurantEmail);
-    formData.append("ItemName", this.state.ItemName);
+    formData.append("restaurantID", this.state.RestaurantEmail);
+    formData.append("DishName", this.state.ItemName);
     formData.append("ItemCost", this.state.ItemCost);
-    formData.append("ItemDesc", this.state.ItemDesc);
-    formData.append("ItemCat", this.state.ItemCat);
-    formData.append("MainIngredients", this.state.MainIngredients);
+    formData.append("Description", this.state.ItemDesc);
+    formData.append("Category", this.state.ItemCat);
+    formData.append("Mainingredients", this.state.MainIngredients);
 
     //set the with credentials to true
     axios.defaults.withCredentials = true;
@@ -89,7 +89,7 @@ class AddMenu extends Component {
       "token"
     );
     axios
-      .post(backendURL+"/menuupload", formData)
+      .post(backendURL+"/restaurant/menuAdd", formData)
 
       .then((response) => {
         //update the state with the response data

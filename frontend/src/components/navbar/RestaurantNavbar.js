@@ -47,11 +47,6 @@ class Navbar3 extends Component {
       );
     }
     let redirectVar = null;
-    if (cookie.load("user")) {
-      redirectVar = <Redirect to="/home" />;
-    } else {
-      redirectVar = <Redirect to="/restlogin" />;
-    }
     return (
       <div>
         {redirectVar}

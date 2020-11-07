@@ -17,6 +17,7 @@ const customerRoute = require('./Routes/customerroutes');
 const app = express();
 const { auth } = require('./Functionality/passport');
 
+app.use(express.static('public'));
 auth();
 app.use(cors({ origin: frontendURL, credentials: true }));
 // use express session to maintain session data
@@ -45,15 +46,7 @@ app.use(function (req, res, next) {
   res.setHeader('Cache-Control', 'no-cache');
   next();
 });
-
-const options = {
-  useNewUrlParser: true,
-  useUnifiedTopology: true,
-  poolSize: 500,
-  bufferMaxEntries: 0,
-  useFindAndModify: false,
-};
-
+app.use(express.static('public'));
 app.use('/general', commonPart);
 
 app.use('/restaurant', restaurantRoute);

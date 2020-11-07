@@ -14,28 +14,18 @@ class Reviews extends Component {
       restaurant: props.restaurant,
       Reviews: [],
     };
+    console.log(props.restaurant);
   }
   componentDidMount() {
-    console.log(this.state.user);
-    const data = {
-      restaurantID: this.state.restaurant,
-      PageNo:0
-    };
-    axios.defaults.headers.common["authorization"] = localStorage.getItem(
-      "token"
-    );
-    axios
-      .post(backendURL+"restaurant/reviews", data)
-
-      .then((response) => {
-        //update the state with the response data
-        console.log(response.data);
-        this.setState({
-          Reviews: response.data,
-        });
-      });
   }
-
+  componentDidUpdate(prevProps) {
+    if (prevProps.restaurant !== this.props.restaurant) {
+      this.setState({
+        restaurant: this.props.restaurant,
+        Reviews:this.props.restaurant.Reviews
+      });
+    }
+  }
   render() {
     let eventsdisp = null;
     if (this.state.Reviews !== []) {
@@ -44,7 +34,7 @@ class Reviews extends Component {
         return (
           <React.Fragment>
             <Card>
-              <Card.Title>{eve.CustomerName}</Card.Title>
+              <Card.Title>{eve.customerName}</Card.Title>
               <Rating initialRating={eve.Rating} />
               <Card.Body>{eve.Review}</Card.Body>
             </Card>

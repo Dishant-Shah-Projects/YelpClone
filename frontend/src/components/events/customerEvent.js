@@ -183,32 +183,7 @@ class Userevents extends Component {
         });
       });
   };
-  paginate = (e) => {
-    const data = {
-      customerID: this.state.user.ID,
-      OrderStatus:"",
-      Sorted:this.state.Sorted,
-      Filtered:this.state.Filtered,
-      PageNo:0, 
-      SearchString:this.state.SearchString,
-    };
-    axios.defaults.headers.common["authorization"] = localStorage.getItem(
-      "token"
-    );
-    axios
-      .post(backendURL+"/customer/events",data)
-
-      .then((response) => {
-        //update the state with the response data
-        console.log(response.data);
-        this.setState({
-          Events: response.data,
-          dispEvents: response.data,
-          Pages:response.data[0],
-        });
-      });
-
-  }
+ 
   render() {
     console.log(this.state.Events);
     let eventsdisp = null;

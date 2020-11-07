@@ -34,6 +34,43 @@ async function handle_request(msg, callback) {
       }
       break;
     }
+    case 'menuAdd': {
+      const res = {};
+      try {
+        const {
+          restaurantID, DishName, Mainingredients, Description, DishPrice, Category, DishIMG,
+        } = msg.body;
+        const rest = await Restaurant.findOne({ restaurantID });
+        const ItemID = 1 + rest.Menu.length;
+        Restaurant.findOneAndUpdate(
+          { restaurantID },
+          {
+            $push: {
+              Menu: {
+                ItemID, DishName, Mainingredients, DishIMG, DishPrice, Description, Category,
+              },
+            },
+          },
+          { safe: true, upsert: true, new: true },
+          (err, model) => {
+            if (err) {
+              res.status = 500;
+              res.end = 'Network Error';
+              callback(null, res);
+            } else {
+              res.status = 200;
+              res.end = JSON.stringify(model);
+              callback(null, res);
+            }
+          },
+        );
+      } catch {
+        res.status = 500;
+        res.end = 'Network Error';
+        callback(null, res);
+      }
+      break;
+    }
     case 'profileUpdate': {
       const res = {};
       try {

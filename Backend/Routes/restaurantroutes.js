@@ -16,9 +16,7 @@ const multerStorage = multer.diskStorage({
 const kafka = require('../kafka/client');
 
 const upload = multer({ storage: multerStorage }).single('food');
-const {
-  menuAdd,
-} = require('../Functionality/Restaurantfunctionality');
+
 const { auth, checkAuth } = require('../Functionality/passport');
 
 auth();
@@ -84,8 +82,24 @@ Router.post('/menu', checkAuth, async (req, res) => {
 });
 // menu add
 Router.post('/menuAdd', upload, checkAuth, async (req, res) => {
-  const value = await menuAdd(req, res);
-  return value;
+  req.body.DishIMG = req.file.filename;
+  const data = {
+    api: 'menuAdd',
+    body: req.body,
+  };
+  kafka.make_request('restaurant444', data, (err, results) => {
+    console.log('in result');
+    console.log(results);
+    if (err) {
+      console.log('Inside err');
+      res.status(500);
+      res.end('Network Error');
+    } else {
+      console.log('Inside else');
+      res.status(results.status);
+      res.end(results.end);
+    }
+  });
 });
 // review view
 Router.get('/review', checkAuth, async (req, res) => {

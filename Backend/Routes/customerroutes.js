@@ -18,10 +18,6 @@ const multerStorage = multer.diskStorage({
   },
 });
 const upload = multer({ storage: multerStorage }).single('profileImage');
-const {
-
-  profilePictureUpdate,
-} = require('../Functionality/customerFunctionality');
 // loadprofile
 Router.get('/profile', checkAuth, async (req, res) => {
   const data = {
@@ -63,8 +59,24 @@ Router.post('/profileUpdate', checkAuth, async (req, res) => {
   });
 });
 Router.post('/profilePicture', upload, async (req, res) => {
-  const value = await profilePictureUpdate(req, res);
-  return value;
+  req.body.ProfilePicURL = req.file.filename;
+  const data = {
+    api: 'profilePictureUpdate',
+    body: req.body,
+  };
+  kafka.make_request('customer444', data, (err, results) => {
+    console.log('in result');
+    console.log(results);
+    if (err) {
+      console.log('Inside err');
+      res.status(500);
+      res.end('Network Error');
+    } else {
+      console.log('Inside else');
+      res.status(results.status);
+      res.end(results.end);
+    }
+  });
 });
 Router.post('/profileAbout', checkAuth, async (req, res) => {
   const data = {
