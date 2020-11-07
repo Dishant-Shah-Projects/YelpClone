@@ -411,6 +411,10 @@ async function handle_request(msg, callback) {
         } else if (term === 'Following') {
           const user2 = await Customer.findOne({ CustomerID }).select('-Password');
           user = user2.PeopleFollowed;
+        } else if (term === 'location') {
+          const user2 = await Customer.findOne({ CustomerID }).select('-Password');
+          const user3 = await Customer.find({ State: user2.State }).select('-Password');
+          user = user3;
         }
         if (user) {
           const resultarray = [];

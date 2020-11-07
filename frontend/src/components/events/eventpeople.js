@@ -9,18 +9,11 @@ class Peopleevent extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      event: props.event,
-      users:props.event.PeopleRegistered
+      users:props.event
     };
-    console.log(this.state);
   }
-  componentDidMount() {
-
-  }
-
   render() {
     var Output = null;
-    console.log(this.state.Orderitems);
     Output = this.state.users.map((eve) => {
       return (
         <React.Fragment>

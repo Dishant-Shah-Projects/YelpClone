@@ -21,34 +21,29 @@ class userSearchTab extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      locat: null,
+      CustomerID:localStorage.getItem("userId"),
       restaurants: [],
       searchcolumn: "",
       searchterm: "",
+      PageNo:0,
     };
     this.updateterm = this.updateterm.bind(this);
     this.updatecat = this.updatecat.bind(this);
     this.handleupsearch = this.handleupsearch.bind(this);
   }
   componentDidMount() {
-    navigator.geolocation.getCurrentPosition((position) => {
-      console.log(position.coords);
-      const locat = {
-        lat: position.coords.latitude,
-        lng: position.coords.longitude,
-      };
-      this.setState({ locat });
-    });
+
     const data = {
-      searchcolumn: this.state.searchcolumn,
-      searchterm: this.state.searchterm,
+      CustomerID:this.state.CustomerID,
+      term: this.state.searchcolumn,
+      value: this.state.searchterm,
+      PageNo:this.state.PageNo,
     };
     axios.defaults.headers.common["authorization"] = localStorage.getItem(
       "token"
     );
     axios
-      .post(backendURL+"/restaurants", data)
-
+      .post(backendURL+"/customer/customerSearch", data)
       .then((response) => {
         //update the state with the response data
         console.log(response.data);
@@ -69,12 +64,63 @@ class userSearchTab extends Component {
     });
   };
   handleupsearch = () => {
-    var data = {
-      searchterm: this.state.searchterm,
-      searchcolumn: this.state.searchcolumn,
+    this.setState({
+      PageNo:0,
+    });
+    const data = {
+      CustomerID:this.state.CustomerID,
+      term: this.state.searchcolumn,
+      value: this.state.searchterm,
+      PageNo:this.state.PageNo,
     };
     axios
-      .post(backendURL+"/restaurantsearch", data)
+      .post(backendURL+"/customer/customerSearch", data)
+
+      .then((response) => {
+        //update the state with the response data
+        console.log(response.data);
+        this.setState({
+          restaurants: response.data,
+          loaded: true,
+        });
+      });
+  };
+  handleupsearch2 = () => {
+    this.setState({
+      searchterm:'Following',
+      PageNo:0,
+    });
+    const data = {
+      CustomerID:this.state.CustomerID,
+      term: this.state.searchcolumn,
+      value: this.state.searchterm,
+      PageNo:this.state.PageNo,
+    };
+    axios
+      .post(backendURL+"/customer/customerSearch", data)
+
+      .then((response) => {
+        //update the state with the response data
+        console.log(response.data);
+        this.setState({
+          restaurants: response.data,
+          loaded: true,
+        });
+      });
+  };
+  handleupsearch3 = () => {
+    this.setState({
+      searchterm:'location',
+      PageNo:0,
+    });
+    const data = {
+      CustomerID:this.state.CustomerID,
+      term: this.state.searchcolumn,
+      value: this.state.searchterm,
+      PageNo:this.state.PageNo,
+    };
+    axios
+      .post(backendURL+"/customer/customerSearch", data)
 
       .then((response) => {
         //update the state with the response data
@@ -94,22 +140,39 @@ class userSearchTab extends Component {
     var eventsdisp = null;
     eventsdisp = this.state.restaurants.map((eve) => {
       console.log(eve.RestaurantEmail);
+      if(eve.FirstName){
+        return (
+          <>
+            <ListGroup.Item>
+              <Link
+                to={{
+                  pathname: "/user",
+                  state: { foo: eve.customerID },
+                }}
+              >
+                {eve.FirstName} {eve.LastName}
+              </Link>
+            </ListGroup.Item>
+          </>
+        );
+      }
+      else{
       return (
         <>
           <ListGroup.Item>
             <Link
               to={{
-                pathname: "/restaurant",
-                state: { foo: eve.RestaurantEmail },
+                pathname: "/user",
+                state: { foo: eve.customerID },
               }}
             >
-              {eve.RestaurantName}
+              {eve.CustomerName}
             </Link>
           </ListGroup.Item>
         </>
       );
+            }
     });
-    if (cookie.load("customer")) {
       return (
         <Container>
           <Jumbotron>
@@ -123,28 +186,27 @@ class userSearchTab extends Component {
                   onChange={this.updateterm}
                 />
                 <Form.Control as="select" required onChange={this.updatecat}>
-                  <option value="cuisines">Cusine</option>
-                  <option value="location">Location</option>
-                  <option value="mode of delivery">Mode of Delivery</option>
-                  <option value="DishName">Dish</option>
+                  <option value="FirstName">FirstName</option>
+                  <option value="Nickname">Nickname</option>
+                  <option value="mode of Following">Following</option>
+                  <option value="location">location</option>
                 </Form.Control>
                 <Button onClick={this.handleupsearch} variant="outline-success">
                   Search
                 </Button>
               </center>
             </Form>
+            <Button onClick={this.handleupsearch2} variant="outline-success">
+                  following
+                </Button>
+                <Button onClick={this.handleupsearch3} variant="outline-success">
+                  locaton
+                </Button>
           </Jumbotron>
           <h1> Restaurants Near Me</h1>
           <ListGroup>{eventsdisp}</ListGroup>
-          <MapContainer
-            location={this.state.locat}
-            rest={this.state.restaurants}
-          />
         </Container>
       );
-    }  else {
-      return <Redirect to="/login" />;
-    }
   }
 }
 
