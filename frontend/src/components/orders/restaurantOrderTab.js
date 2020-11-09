@@ -148,8 +148,8 @@ class RestaurantOrder extends Component {
             <Card>
               <Card.Title>Customer: {eve.customerName}</Card.Title>
               <Link to={{ pathname: "/user", state: { foo: eve.customerID } }}>
-              {eve.restaurantName}
-                    </Link>
+                {eve.restaurantName}
+              </Link>
               <Card.Body>
                 <a>Order Status: {eve.OrderStatus}</a>
                 <br />

@@ -61,8 +61,11 @@ class Conversation2 extends Component {
           this.setState({
             Registered: true,
           });
-          let message=this.state.messages;
-          message.Messages.push({ Messager: "restaurant",Message: this.state.Message,})
+          let message = this.state.messages;
+          message.Messages.push({
+            Messager: "restaurant",
+            Message: this.state.Message,
+          });
           this.props.messagesend(message);
         } else {
           this.setState({

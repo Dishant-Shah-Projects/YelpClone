@@ -6,7 +6,7 @@ import { Redirect } from "react-router";
 import Navbar2 from "../navbar/UserNavbar";
 import Navbar3 from "../navbar/RestaurantNavbar";
 import { connect } from "react-redux";
-import { login,messageload } from "../../Redux/constants/actiontypes";
+import { login, messageload } from "../../Redux/constants/actiontypes";
 import axios from "axios";
 import { backendURL } from "../../config";
 import Conversation2 from "./conversation2";
@@ -35,26 +35,26 @@ class RestaurantMessage extends Component {
     console.log("Apple");
   }
   componentDidMount() {
-    if(this.state.messagedata.length===0){
-    const data = {
-      restaurantID: this.state.UserEmail,
-    };
-    console.log(data);
-    axios.defaults.headers.common["authorization"] = localStorage.getItem(
-      "token"
-    );
-    axios
-      .post(backendURL + "/restaurant/messageLoad", data)
-      .then((response) => {
-        //update the state with the response data
-        console.log(response.data);
-        this.setState({
-          restaurants: response.data,
-          loaded: true,
-          messagedata: response.data,
+    if (this.state.messagedata.length === 0) {
+      const data = {
+        restaurantID: this.state.UserEmail,
+      };
+      console.log(data);
+      axios.defaults.headers.common["authorization"] = localStorage.getItem(
+        "token"
+      );
+      axios
+        .post(backendURL + "/restaurant/messageLoad", data)
+        .then((response) => {
+          //update the state with the response data
+          console.log(response.data);
+          this.setState({
+            restaurants: response.data,
+            loaded: true,
+            messagedata: response.data,
+          });
+          this.props.messageload(response.data);
         });
-        this.props.messageload(response.data);
-      });
     }
   }
 
@@ -62,7 +62,7 @@ class RestaurantMessage extends Component {
     let eventsdisp = null;
     let eventsdisp2 = null;
 
-   try{
+    try {
       eventsdisp = this.state.messagedata.map((eve) => {
         console.log(eve);
         return (
@@ -83,11 +83,10 @@ class RestaurantMessage extends Component {
           </React.Fragment>
         );
       });
-    }
-    catch{
+    } catch {
       console.log("error");
     }
-    
+
     return (
       <>
         <Container>
@@ -115,7 +114,7 @@ const mapStateToProps = (state, oweprops) => {
   const conversations = state.messageReducer.conversations;
   return {
     userInfo: userInfo,
-    conversations:conversations,
+    conversations: conversations,
   };
 };
 

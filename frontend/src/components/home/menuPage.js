@@ -27,7 +27,7 @@ class MenuPage extends Component {
     this.pagedown = this.pagedown.bind(this);
   }
   componentDidMount() {
-    if (this.state.Restmenu.length===0) {
+    if (this.state.Restmenu.length === 0) {
       console.log(this.state.Restaurant);
       const data = {
         restaurantID: this.state.Restaurant.restaurantID,

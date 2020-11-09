@@ -6,7 +6,7 @@ import { Redirect } from "react-router";
 import Navbar2 from "../navbar/UserNavbar";
 import Navbar3 from "../navbar/RestaurantNavbar";
 import { connect } from "react-redux";
-import { login,messageload } from "../../Redux/constants/actiontypes";
+import { login, messageload } from "../../Redux/constants/actiontypes";
 import axios from "axios";
 import { backendURL } from "../../config";
 import Conversation from "./conversation";

@@ -57,20 +57,15 @@ class CustomerHome extends Component {
       });
   }
   render() {
-
-    let img=null;
-    if(this.state.userinfo.ProfilePicURL){
-      console.log(backendURL+"/images/"+this.state.userinfo.ProfilePicURL);
-    img=(
-      <Image
-      src={
-        backendURL +
-        "/images/" +
-        this.state.userinfo.ProfilePicURL
-      }
-      style={{ width: 150, height: 150 }}
-    />
-    )
+    let img = null;
+    if (this.state.userinfo.ProfilePicURL) {
+      console.log(backendURL + "/images/" + this.state.userinfo.ProfilePicURL);
+      img = (
+        <Image
+          src={backendURL + "/images/" + this.state.userinfo.ProfilePicURL}
+          style={{ width: 150, height: 150 }}
+        />
+      );
     }
     return (
       <React.Fragment>
@@ -78,9 +73,7 @@ class CustomerHome extends Component {
           <Jumbotron fluid>
             <Container>
               <Row>
-                <Col md={3}>
-                {img}
-                </Col>
+                <Col md={3}>{img}</Col>
                 <Col md={9}>
                   <Card>
                     <Card.Title>

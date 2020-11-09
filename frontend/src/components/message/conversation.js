@@ -6,7 +6,7 @@ import { Redirect } from "react-router";
 import Navbar2 from "../navbar/UserNavbar";
 import Navbar3 from "../navbar/RestaurantNavbar";
 import { connect } from "react-redux";
-import { login,messagesend } from "../../Redux/constants/actiontypes";
+import { login, messagesend } from "../../Redux/constants/actiontypes";
 import axios from "axios";
 import { backendURL } from "../../config";
 import {
@@ -61,8 +61,11 @@ class Conversation extends Component {
           this.setState({
             Registered: true,
           });
-          let message=this.state.messages;
-          message.Messages.push({ Messager: "restaurant",Message: this.state.Message,})
+          let message = this.state.messages;
+          message.Messages.push({
+            Messager: "restaurant",
+            Message: this.state.Message,
+          });
           this.props.messagesend(message);
         } else {
           this.setState({
@@ -135,7 +138,6 @@ class Conversation extends Component {
     );
   }
 }
-
 
 const mapStateToProps = (state, oweprops) => {
   const userInfo = state.LoginReducer.userInfo;
