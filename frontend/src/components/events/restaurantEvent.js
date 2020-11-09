@@ -7,7 +7,7 @@ import Setups from "./eventSetup";
 import "bootstrap/dist/js/bootstrap.bundle.min";
 import "bootstrap/dist/css/bootstrap.min.css";
 import { backendURL } from "../../config";
-import Peopleevent from "./eventPeople";
+// import Peopleevent from "./eventPeople";
 import { connect } from "react-redux";
 import { profile } from "../../Redux/constants/actiontypes";
 class Restaurantevents extends Component {
@@ -106,7 +106,8 @@ class Restaurantevents extends Component {
               <a>{eve.Time}</a>
               <a>{eve.Date}</a>
               <a>{eve.Hashtags}</a>
-              <Peopleevent event={eve.PeopleRegistered} />
+              {//<Peopleevent event={eve.PeopleRegistered} />
+              }
             </Card>
           </React.Fragment>
         );
