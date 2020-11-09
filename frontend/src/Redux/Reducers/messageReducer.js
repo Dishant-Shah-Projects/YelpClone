@@ -11,14 +11,7 @@ const messageReducer = (state = defaultState, action) => {
       };
     }
     case messagesend: {
-        let convo =state.conversations;
-        let holder = null;
-        for (con of state.conversations){
-            if(con.restaurantID==action.payload.restaurantID&& con.customerID===action.payload.customerID){
-                con=action.payload;
-                holder=con;
-            }
-        }
+
       return {
         ...state,
         conversations: [ ...state.profileinfo, ...action.payload ],
