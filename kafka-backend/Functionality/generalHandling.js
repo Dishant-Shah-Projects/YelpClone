@@ -147,7 +147,8 @@ async function handle_request(msg, callback) {
         } = msg.body;
         if (Role === 'Restaurant') {
           const user = await Restaurant.findOne({ UserName });
-          if ((user) && (await bcrypt.compare(Password, user.Password))) {
+          const passcheck = await bcrypt.compare(Password, user.Password);
+          if ((user) && (passcheck)) {
             const payload = { rol: Role, Name: UserName, ID: user.restaurantID };
             const accesstoken = jwt.sign(payload, secret, {
               expiresIn: 1008000,
@@ -180,7 +181,8 @@ async function handle_request(msg, callback) {
             res.end = JSON.stringify('Incorrect Credentials');
           }
         }
-      } catch {
+      } catch (err) {
+        console.log(err);
         res.status = 500;
         res.end = 'Network Error';
         callback(null, res);

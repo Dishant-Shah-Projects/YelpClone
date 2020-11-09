@@ -14,7 +14,6 @@ class ROrder extends Component {
       Orderinfo: props.orderinfo,
       Orderitems: [],
       Orderstate: props.orderinfo.OrderStatus,
-      
     };
 
     console.log(this.state);
@@ -47,8 +46,8 @@ class ROrder extends Component {
         //update the state with the response data
         console.log(response.data);
         console.log("Status Code : ", response.status);
-        let temp =this.state.Orderinfo;
-        temp.OrderStatus=this.state.Orderstate;
+        let temp = this.state.Orderinfo;
+        temp.OrderStatus = this.state.Orderstate;
         this.props.orderupdate(temp);
       });
   };
@@ -58,25 +57,22 @@ class ROrder extends Component {
     console.log(this.state.Orderitems);
     console.log(this.state.Orderinfo.Items);
     var total = 0;
-    try{
-    if (this.state.Orderinfo.Items.length !== 0) {
-      Output = this.state.Orderinfo.Items.map((eve) => {
-        total = total + eve.DishPrice;
-        return (
-          <React.Fragment>
-            <tr>
-              <td>{eve.DishName}</td>
-              <td>{eve.DishQuantity}</td>
-              <td>{eve.DishPrice}</td>
-            </tr>
-          </React.Fragment>
-        );
-      });
-    }
-  }
-  catch{
-
-  }
+    try {
+      if (this.state.Orderinfo.Items.length !== 0) {
+        Output = this.state.Orderinfo.Items.map((eve) => {
+          total = total + eve.DishPrice;
+          return (
+            <React.Fragment>
+              <tr>
+                <td>{eve.DishName}</td>
+                <td>{eve.DishQuantity}</td>
+                <td>{eve.DishPrice}</td>
+              </tr>
+            </React.Fragment>
+          );
+        });
+      }
+    } catch {}
     let optionvalue = null;
     if (this.state.Orderinfo.OrderType === "delivery") {
       optionvalue = (

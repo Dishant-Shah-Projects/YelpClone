@@ -6,10 +6,10 @@ import { Redirect } from "react-router";
 import Navbar2 from "../navbar/UserNavbar";
 import Navbar3 from "../navbar/RestaurantNavbar";
 import { connect } from "react-redux";
-import { login } from "../../Redux/constants/actiontypes";
+import { login,messageload } from "../../Redux/constants/actiontypes";
 import axios from "axios";
 import { backendURL } from "../../config";
-import Conversation from "./conversation"
+import Conversation from "./conversation";
 import {
   Container,
   Card,
@@ -29,8 +29,8 @@ class CustomerMessage extends Component {
       UserEmail: oweprops.userInfo.ID,
       name: oweprops.name,
       Registered: false,
-      messagedata:"",
-      loaded:false,
+      messagedata: "",
+      loaded: false,
     };
     console.log("Apple");
     this.handleClick = this.handleClick.bind(this);
@@ -49,8 +49,9 @@ class CustomerMessage extends Component {
       this.setState({
         restaurants: response.data,
         loaded: true,
-        messagedata:response.data,
+        messagedata: response.data,
       });
+      this.props.messageload(response.data);
     });
   }
 
@@ -90,14 +91,16 @@ class CustomerMessage extends Component {
         Register
       </Button>
     );
-    if(this.state.loaded){
+    if (this.state.loaded) {
       eventsdisp = this.state.messagedata.map((eve) => {
         console.log(eve);
         return (
           <React.Fragment>
-                  <Nav.Item>
-        <Nav.Link eventKey={eve.restaurantID}>{eve.restaurantName}</Nav.Link>
-                  </Nav.Item>
+            <Nav.Item>
+              <Nav.Link eventKey={eve.restaurantID}>
+                {eve.restaurantName}
+              </Nav.Link>
+            </Nav.Item>
           </React.Fragment>
         );
       });
@@ -105,9 +108,9 @@ class CustomerMessage extends Component {
         console.log(eve);
         return (
           <React.Fragment>
-                  <Tab.Pane eventKey={eve.restaurantID}>
-                    <Conversation messages={eve}/>
-                    </Tab.Pane>
+            <Tab.Pane eventKey={eve.restaurantID}>
+              <Conversation messages={eve} />
+            </Tab.Pane>
           </React.Fragment>
         );
       });
@@ -124,9 +127,7 @@ class CustomerMessage extends Component {
                 </Nav>
               </Col>
               <Col sm={9}>
-                <Tab.Content>
-                {eventsdisp2}
-                </Tab.Content>
+                <Tab.Content>{eventsdisp2}</Tab.Content>
               </Col>
             </Row>
           </Tab.Container>
@@ -136,7 +137,7 @@ class CustomerMessage extends Component {
   }
 }
 
-const mapStateToProps = (state,oweprops) => {
+const mapStateToProps = (state, oweprops) => {
   const userInfo = state.LoginReducer.userInfo;
   return {
     userInfo: userInfo,
@@ -145,9 +146,9 @@ const mapStateToProps = (state,oweprops) => {
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    login: (payload) => {
+    messageload: (payload) => {
       dispatch({
-        type: login,
+        type: messageload,
         payload,
       });
     },

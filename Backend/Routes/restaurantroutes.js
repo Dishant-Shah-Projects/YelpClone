@@ -21,14 +21,14 @@ const { auth, checkAuth } = require('../Functionality/passport');
 
 auth();
 // loadprofile
-Router.get('/profile', checkAuth, async (req, res) => {
+Router.get('/profile', async (req, res) => {
   const data = {
     api: 'getProfile',
     query: req.query,
   };
   kafka.make_request('restaurant444', data, (err, results) => {
-    console.log('in result');
-    console.log(results);
+    // console.log('in result');
+    // console.log(results);
     if (err) {
       console.log('Inside err');
       res.status(500);

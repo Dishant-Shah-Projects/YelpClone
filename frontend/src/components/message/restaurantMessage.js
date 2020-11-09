@@ -6,10 +6,10 @@ import { Redirect } from "react-router";
 import Navbar2 from "../navbar/UserNavbar";
 import Navbar3 from "../navbar/RestaurantNavbar";
 import { connect } from "react-redux";
-import { login } from "../../Redux/constants/actiontypes";
+import { login,messageload } from "../../Redux/constants/actiontypes";
 import axios from "axios";
 import { backendURL } from "../../config";
-import Conversation2 from "./conversation2"
+import Conversation2 from "./conversation2";
 import {
   Container,
   Card,
@@ -29,12 +29,13 @@ class RestaurantMessage extends Component {
       UserEmail: oweprops.userInfo.ID,
       name: oweprops.name,
       Registered: false,
-      messagedata:"",
-      loaded:false,
+      messagedata: oweprops.conversations,
+      loaded: false,
     };
     console.log("Apple");
   }
   componentDidMount() {
+    if(this.state.messagedata.length===0){
     const data = {
       restaurantID: this.state.UserEmail,
     };
@@ -42,30 +43,33 @@ class RestaurantMessage extends Component {
     axios.defaults.headers.common["authorization"] = localStorage.getItem(
       "token"
     );
-    axios.post(backendURL + "/restaurant/messageLoad", data).then((response) => {
-      //update the state with the response data
-      console.log(response.data);
-      this.setState({
-        restaurants: response.data,
-        loaded: true,
-        messagedata:response.data,
+    axios
+      .post(backendURL + "/restaurant/messageLoad", data)
+      .then((response) => {
+        //update the state with the response data
+        console.log(response.data);
+        this.setState({
+          restaurants: response.data,
+          loaded: true,
+          messagedata: response.data,
+        });
+        this.props.messageload(response.data);
       });
-    });
+    }
   }
-
 
   render() {
     let eventsdisp = null;
     let eventsdisp2 = null;
 
-    if(this.state.loaded){
+   try{
       eventsdisp = this.state.messagedata.map((eve) => {
         console.log(eve);
         return (
           <React.Fragment>
-                  <Nav.Item>
-        <Nav.Link eventKey={eve.customerID}>{eve.customerName}</Nav.Link>
-                  </Nav.Item>
+            <Nav.Item>
+              <Nav.Link eventKey={eve.customerID}>{eve.customerName}</Nav.Link>
+            </Nav.Item>
           </React.Fragment>
         );
       });
@@ -73,13 +77,17 @@ class RestaurantMessage extends Component {
         console.log(eve);
         return (
           <React.Fragment>
-                  <Tab.Pane eventKey={eve.customerID}>
-                    <Conversation2 messages={eve}/>
-                    </Tab.Pane>
+            <Tab.Pane eventKey={eve.customerID}>
+              <Conversation2 messages={eve} />
+            </Tab.Pane>
           </React.Fragment>
         );
       });
     }
+    catch{
+      console.log("error");
+    }
+    
     return (
       <>
         <Container>
@@ -92,9 +100,7 @@ class RestaurantMessage extends Component {
                 </Nav>
               </Col>
               <Col sm={9}>
-                <Tab.Content>
-                {eventsdisp2}
-                </Tab.Content>
+                <Tab.Content>{eventsdisp2}</Tab.Content>
               </Col>
             </Row>
           </Tab.Container>
@@ -104,18 +110,20 @@ class RestaurantMessage extends Component {
   }
 }
 
-const mapStateToProps = (state,oweprops) => {
+const mapStateToProps = (state, oweprops) => {
   const userInfo = state.LoginReducer.userInfo;
+  const conversations = state.messageReducer.conversations;
   return {
     userInfo: userInfo,
+    conversations:conversations,
   };
 };
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    login: (payload) => {
+    messageload: (payload) => {
       dispatch({
-        type: login,
+        type: messageload,
         payload,
       });
     },
@@ -124,4 +132,3 @@ const mapDispatchToProps = (dispatch) => {
 
 //export Login Component
 export default connect(mapStateToProps, mapDispatchToProps)(RestaurantMessage);
-

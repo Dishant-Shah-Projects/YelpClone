@@ -37,6 +37,7 @@ class CustomerHome extends Component {
     axios.defaults.headers.common["authorization"] = localStorage.getItem(
       "token"
     );
+
     axios
       .get(backendURL + "/customer/profile", {
         params: {
@@ -56,12 +57,21 @@ class CustomerHome extends Component {
       });
   }
   render() {
-    //iterate over books to create a table row
 
-    //if not logged in go to login page
-
-    // var _id = "test@test.com2";
-    // var _id2 = "test@test.com";
+    let img=null;
+    if(this.state.userinfo.ProfilePicURL){
+      console.log(backendURL+"/images/"+this.state.userinfo.ProfilePicURL);
+    img=(
+      <Image
+      src={
+        backendURL +
+        "/images/" +
+        this.state.userinfo.ProfilePicURL
+      }
+      style={{ width: 150, height: 150 }}
+    />
+    )
+    }
     return (
       <React.Fragment>
         <Container>
@@ -69,10 +79,7 @@ class CustomerHome extends Component {
             <Container>
               <Row>
                 <Col md={3}>
-                  <Image
-                   src={backendURL+"/images/"+this.state.iteminfo.ProfilePicURL}
-                    style={{ width: 150, height: 150 }}
-                  />
+                {img}
                 </Col>
                 <Col md={9}>
                   <Card>
@@ -86,12 +93,9 @@ class CustomerHome extends Component {
                     <a>
                       {this.state.userinfo.State}, {this.state.userinfo.Country}
                     </a>
-                    <Link to={{ pathname: "/user", state: { foo: 2 } }}>
-    My route2
-  </Link>
                     <ListGroup className="list-group-flush">
                       <ListGroupItem>
-                        Phone Number: {this.state.userinfo.Password}
+                        Phone Number: {this.state.userinfo.PhoneNo}
                       </ListGroupItem>
                       <ListGroupItem>
                         Email: {this.state.userinfo.Email}

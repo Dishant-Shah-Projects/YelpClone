@@ -11,7 +11,7 @@ class ProfilePicUpload extends Component {
     super(props);
     this.state = {
       selectedFile: null,
-      customer: cookie.load("user"),
+      customer: localStorage.getItem("userId"),
       //restaurant:props.restaurantemail
     };
     this.onFileChange = this.onFileChange.bind(this);

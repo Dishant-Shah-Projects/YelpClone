@@ -15,8 +15,8 @@ async function handle_request(msg, callback) {
     case 'getProfile': {
       const res = {};
       try {
-        const { customerID } = msg.query;
-        const user = await Restaurant.findOne({ customerID }).select('-Password -Menu');
+        const { restaurantID } = msg.query;
+        const user = await Restaurant.findOne({ restaurantID }).select('-Password -Menu');
         if (user) {
           res.status = 200;
           res.end = JSON.stringify(user);

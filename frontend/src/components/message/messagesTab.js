@@ -5,7 +5,7 @@ import { Redirect } from "react-router";
 import Navbar2 from "../navbar/UserNavbar";
 import Navbar3 from "../navbar/RestaurantNavbar";
 import CustomerMessage from "./customerMessage";
-import RestaurantMessage from './restaurantMessage';
+import RestaurantMessage from "./restaurantMessage";
 class messageTab extends Component {
   render() {
     //iterate over books to create a table row
@@ -13,15 +13,10 @@ class messageTab extends Component {
     console.log(localStorage.getItem("userrole"));
     if (localStorage.getItem("userrole") === "Customer") {
       console.log("Apple");
-      return (
-        
-          <CustomerMessage/>
-        
-      );
+      return <CustomerMessage />;
     } else if (localStorage.getItem("userrole") === "Restaurant") {
       return (
         <>
-          <Navbar3></Navbar3>
           <RestaurantMessage></RestaurantMessage>
         </>
       );

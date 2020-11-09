@@ -22,10 +22,7 @@ class Follow extends Component {
   componentDidMount() {
     var found = false;
     for (var i = 0; i < this.state.info.PeopleFollowed.length; i++) {
-      if (
-        this.state.info.PeopleFollowed[i].CustomerID ==
-        this.state.ID
-      ) {
+      if (this.state.info.PeopleFollowed[i].CustomerID == this.state.ID) {
         found = true;
         break;
       }
@@ -60,7 +57,7 @@ class Follow extends Component {
           });
         }
       });
-      return false;
+    return false;
   };
 
   render() {

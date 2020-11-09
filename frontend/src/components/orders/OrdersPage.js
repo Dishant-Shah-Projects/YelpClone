@@ -14,14 +14,12 @@ class OrdersPage extends Component {
     if (localStorage.getItem("userrole") === "Customer") {
       return (
         <>
-          <Navbar2></Navbar2>
           <UserOrders></UserOrders>
         </>
       );
     } else if (localStorage.getItem("userrole") === "Restaurant") {
       return (
         <>
-          <Navbar3></Navbar3>
           <RestaurantOrders></RestaurantOrders>
         </>
       );

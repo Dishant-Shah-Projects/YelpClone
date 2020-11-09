@@ -1,13 +1,13 @@
 import React, { Component } from "react";
 import "../../App.css";
-import { Container, Card,Pagination } from "react-bootstrap";
+import { Container, Card, Pagination } from "react-bootstrap";
 import cookie from "react-cookies";
 import axios from "axios";
 import Setups from "./eventSetup";
 import "bootstrap/dist/js/bootstrap.bundle.min";
 import "bootstrap/dist/css/bootstrap.min.css";
 import { backendURL } from "../../config";
-// import Peopleevent from "./eventPeople";
+ import Peopleevent from "./eventPeople";
 import { connect } from "react-redux";
 import { profile } from "../../Redux/constants/actiontypes";
 class Restaurantevents extends Component {
@@ -17,7 +17,7 @@ class Restaurantevents extends Component {
       user: ownprops.userInfo,
       dispEvents: [],
       Pages: 0,
-      PageNo:0,
+      PageNo: 0,
     };
     console.log(ownprops.userInfo);
   }
@@ -43,7 +43,7 @@ class Restaurantevents extends Component {
         });
       });
   }
-  pageup=()=> {
+  pageup = () => {
     console.log(this.state.user);
     axios.defaults.headers.common["authorization"] = localStorage.getItem(
       "token"
@@ -52,7 +52,7 @@ class Restaurantevents extends Component {
       .get(backendURL + "/restaurant/events", {
         params: {
           restaurantID: this.state.user.ID,
-          PageNo: this.state.PageNo+1,
+          PageNo: this.state.PageNo + 1,
         },
         withCredentials: true,
       })
@@ -62,11 +62,11 @@ class Restaurantevents extends Component {
         this.setState({
           dispEvents: response.data[1],
           Pages: response.data[0],
-          PageNo: this.state.PageNo+1,
+          PageNo: this.state.PageNo + 1,
         });
       });
-  }
-  pagedown=()=> {
+  };
+  pagedown = () => {
     console.log(this.state.user);
     axios.defaults.headers.common["authorization"] = localStorage.getItem(
       "token"
@@ -75,7 +75,7 @@ class Restaurantevents extends Component {
       .get(backendURL + "/restaurant/events", {
         params: {
           restaurantID: this.state.user.ID,
-          PageNo: this.state.PageNo-1,
+          PageNo: this.state.PageNo - 1,
         },
         withCredentials: true,
       })
@@ -85,10 +85,10 @@ class Restaurantevents extends Component {
         this.setState({
           dispEvents: response.data[1],
           Pages: response.data[0],
-          PageNo:this.state.PageNo-1,
+          PageNo: this.state.PageNo - 1,
         });
       });
-  }
+  };
 
   render() {
     let eventsdisp = null;
@@ -106,8 +106,9 @@ class Restaurantevents extends Component {
               <a>{eve.Time}</a>
               <a>{eve.Date}</a>
               <a>{eve.Hashtags}</a>
-              {//<Peopleevent event={eve.PeopleRegistered} />
-              }
+              
+                <Peopleevent event={eve.PeopleRegistered} />
+              
             </Card>
           </React.Fragment>
         );
@@ -118,10 +119,12 @@ class Restaurantevents extends Component {
       <Container>
         <h1>Events Page</h1>
         <Pagination>
-        <Pagination.Prev onClick={this.pagedown} />
-        <Pagination.Item disabled>{this.state.PageNo+"/"+this.state.Pages}</Pagination.Item>
+          <Pagination.Prev onClick={this.pagedown} />
+          <Pagination.Item disabled>
+            {this.state.PageNo + "/" + this.state.Pages}
+          </Pagination.Item>
 
-        <Pagination.Next onClick={this.pageup} />
+          <Pagination.Next onClick={this.pageup} />
         </Pagination>
         {eventsdisp}
         <h1>Events Setup</h1>

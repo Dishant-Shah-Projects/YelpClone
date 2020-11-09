@@ -33,8 +33,8 @@ Router.post('/login', async (req, res) => {
     body: req.body,
   };
   kafka.make_request('general444', data, (err, results) => {
-    console.log('in result');
-    console.log(results);
+    // console.log('in result');
+    // console.log(results);
     if (err) {
       console.log('Inside err');
       res.status(500);

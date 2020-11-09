@@ -11,8 +11,6 @@ export class MapContainer extends Component {
       current: { lat: props.location.lat, lng: props.location.lng },
       stores: props.rest,
     };
-  
-    
   }
 
   displayMarkers = () => {

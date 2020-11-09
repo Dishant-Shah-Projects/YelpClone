@@ -180,7 +180,7 @@ class userSearchTab extends Component {
         <Jumbotron>
           <Form inline justify-content-center>
             <center>
-              <h2>Restaurant Search Bar</h2>
+              <h2>Customer Search Bar</h2>
               <FormControl
                 type="text"
                 placeholder="Search"
@@ -205,7 +205,7 @@ class userSearchTab extends Component {
             locaton
           </Button>
         </Jumbotron>
-        <h1> Restaurants Near Me</h1>
+        <h1> Customers Near Me</h1>
         <ListGroup>{eventsdisp}</ListGroup>
       </Container>
     );

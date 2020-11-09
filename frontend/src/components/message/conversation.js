@@ -6,7 +6,7 @@ import { Redirect } from "react-router";
 import Navbar2 from "../navbar/UserNavbar";
 import Navbar3 from "../navbar/RestaurantNavbar";
 import { connect } from "react-redux";
-import { login } from "../../Redux/constants/actiontypes";
+import { login,messagesend } from "../../Redux/constants/actiontypes";
 import axios from "axios";
 import { backendURL } from "../../config";
 import {
@@ -28,8 +28,8 @@ class Conversation extends Component {
     this.state = {
       messages: oweprops.messages,
       Registered: false,
-      messagedata:"",
-      Message:"",
+      messagedata: "",
+      Message: "",
     };
     console.log("Apple");
     this.messageChangeHandler = this.messageChangeHandler.bind(this);
@@ -37,17 +37,17 @@ class Conversation extends Component {
   }
 
   messageChangeHandler = (e) => {
-      console.log(e.target.value);
+    console.log(e.target.value);
     this.setState({
-        Message: e.target.value,
+      Message: e.target.value,
     });
   };
   handleClick = (e) => {
     const data = {
-        restaurantID: this.state.messages.restaurantID,
-        customerID: this.state.messages.customerID,
-        Messager:"customer",
-        Message:this.state.Message
+      restaurantID: this.state.messages.restaurantID,
+      customerID: this.state.messages.customerID,
+      Messager: "customer",
+      Message: this.state.Message,
     };
     console.log(data);
     axios
@@ -61,13 +61,16 @@ class Conversation extends Component {
           this.setState({
             Registered: true,
           });
+          let message=this.state.messages;
+          message.Messages.push({ Messager: "restaurant",Message: this.state.Message,})
+          this.props.messagesend(message);
         } else {
           this.setState({
             Registered: false,
           });
         }
       });
-      return false;
+    return false;
   };
 
   render() {
@@ -79,50 +82,62 @@ class Conversation extends Component {
       </Button>
     );
 
-      eventsdisp = this.state.messages.Messages.map((eve) => {
-        console.log(eve);
-        if(eve.Messager==='restaurant'){
-            return (
-                <React.Fragment>
-                     <ListGroup.Item>         <b>
-           <span className="float-left">{this.state.messages.restaurantName} : {eve.Message}</span>
-         </b></ListGroup.Item>
-                </React.Fragment>
-              );
-        }
-        else if(eve.Messager==='customer'){
-            return (
-                <React.Fragment>
-                     <ListGroup.Item>         <b>
-           <span className="float-right">{eve.Message} : {this.state.messages.customerName}</span>
-         </b></ListGroup.Item>
-                </React.Fragment>
-              );
-        }
+    eventsdisp = this.state.messages.Messages.map((eve) => {
+      console.log(eve);
+      if (eve.Messager === "restaurant") {
+        return (
+          <React.Fragment>
+            <ListGroup.Item>
+              {" "}
+              <b>
+                <span className="float-left">
+                  {this.state.messages.restaurantName} : {eve.Message}
+                </span>
+              </b>
+            </ListGroup.Item>
+          </React.Fragment>
+        );
+      } else if (eve.Messager === "customer") {
+        return (
+          <React.Fragment>
+            <ListGroup.Item>
+              {" "}
+              <b>
+                <span className="float-right">
+                  {eve.Message} : {this.state.messages.customerName}
+                </span>
+              </b>
+            </ListGroup.Item>
+          </React.Fragment>
+        );
+      }
+    });
 
-      });
-
-    
     return (
       <>
         <Container>
-            <h1>{this.state.messages.restaurantName}</h1>
-        <ListGroup>
+          <h1>{this.state.messages.restaurantName}</h1>
+          <ListGroup>
             {eventsdisp}
-            <ListGroup.Item>  
-            <Form inline>
-            <Form.Control type="text" placeholder="Enter message" onChange={this.messageChangeHandler}/>
+            <ListGroup.Item>
+              <Form inline>
+                <Form.Control
+                  type="text"
+                  placeholder="Enter message"
+                  onChange={this.messageChangeHandler}
+                />
                 {reg}
-            </Form>
-            </ListGroup.Item> 
-        </ListGroup>
+              </Form>
+            </ListGroup.Item>
+          </ListGroup>
         </Container>
       </>
     );
   }
 }
 
-const mapStateToProps = (state,oweprops) => {
+
+const mapStateToProps = (state, oweprops) => {
   const userInfo = state.LoginReducer.userInfo;
   return {
     userInfo: userInfo,
@@ -131,9 +146,9 @@ const mapStateToProps = (state,oweprops) => {
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    login: (payload) => {
+    messagesend: (payload) => {
       dispatch({
-        type: login,
+        type: messagesend,
         payload,
       });
     },

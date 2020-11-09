@@ -62,14 +62,14 @@ class UserOrders extends Component {
         });
       });
   }
-  pageup=()=> {
+  pageup = () => {
     console.log(this.state.user);
     const data = {
       customerID: this.state.user.ID,
       OrderStatus: "",
       Sorted: this.state.Sorted,
       Filtered: this.state.Filtered,
-      PageNo: this.state.PageNo+1,
+      PageNo: this.state.PageNo + 1,
       OrderStatus: this.state.OrderStatus,
     };
     axios.defaults.headers.common["authorization"] = localStorage.getItem(
@@ -85,18 +85,18 @@ class UserOrders extends Component {
           Orders: response.data,
           dispOrders: response.data,
           Pages: response.data[0],
-          PageNo:this.state.PageNo+1,
+          PageNo: this.state.PageNo + 1,
         });
       });
-  }
-  pagedown=()=> {
+  };
+  pagedown = () => {
     console.log(this.state.user);
     const data = {
       customerID: this.state.user.ID,
       OrderStatus: "",
       Sorted: this.state.Sorted,
       Filtered: this.state.Filtered,
-      PageNo: this.state.PageNo-1,
+      PageNo: this.state.PageNo - 1,
       OrderStatus: this.state.OrderStatus,
     };
     axios.defaults.headers.common["authorization"] = localStorage.getItem(
@@ -112,10 +112,10 @@ class UserOrders extends Component {
           Orders: response.data,
           dispOrders: response.data,
           Pages: response.data[0],
-          PageNo:this.state.PageNo-1,
+          PageNo: this.state.PageNo - 1,
         });
       });
-  }
+  };
   updateterm2 = (e) => {
     this.setState({
       term2: e.target.value,
@@ -161,7 +161,6 @@ class UserOrders extends Component {
         });
       });
   };
-
 
   render() {
     let eventsdisp = null;
@@ -219,10 +218,12 @@ class UserOrders extends Component {
           </Col>
         </Row>
         <Pagination>
-        <Pagination.Prev onClick={this.pagedown} />
-        <Pagination.Item disabled>{this.state.PageNo+"/"+this.state.Pages}</Pagination.Item>
+          <Pagination.Prev onClick={this.pagedown} />
+          <Pagination.Item disabled>
+            {this.state.PageNo + "/" + this.state.Pages}
+          </Pagination.Item>
 
-        <Pagination.Next onClick={this.pageup} />
+          <Pagination.Next onClick={this.pageup} />
         </Pagination>
         {eventsdisp}
       </Container>

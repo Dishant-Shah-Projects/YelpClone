@@ -7,14 +7,13 @@ const messageReducer = (state = defaultState, action) => {
     case messageload: {
       return {
         ...state,
-        conversations: [ ...action.payload ],
+        conversations: [...action.payload],
       };
     }
     case messagesend: {
-
       return {
         ...state,
-        conversations: [ ...state.profileinfo, ...action.payload ],
+        conversations: [...state.conversations, action.payload],
         //   return Object.assign(state, action.payload);
       };
     }

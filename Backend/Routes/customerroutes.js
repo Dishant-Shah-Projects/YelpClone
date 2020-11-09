@@ -19,14 +19,14 @@ const multerStorage = multer.diskStorage({
 });
 const upload = multer({ storage: multerStorage }).single('profileImage');
 // loadprofile
-Router.get('/profile', checkAuth, async (req, res) => {
+Router.get('/profile', async (req, res) => {
   const data = {
     api: 'getProfile',
     query: req.query,
   };
   kafka.make_request('customer444', data, (err, results) => {
-    console.log('in result');
-    console.log(results);
+    // console.log('in result');
+    // console.log(results);
     if (err) {
       console.log('Inside err');
       res.status(500);
@@ -313,14 +313,14 @@ Router.post('/customerSearch', checkAuth, async (req, res) => {
     }
   });
 });
-Router.post('/customerFollow', checkAuth, async (req, res) => {
+Router.post('/customerFollow', async (req, res) => {
   const data = {
     api: 'customerFollow',
     body: req.body,
   };
   kafka.make_request('customer444', data, (err, results) => {
-    console.log('in result');
-    console.log(results);
+    // console.log('in result');
+    // console.log(results);
     if (err) {
       console.log('Inside err');
       res.status(500);
@@ -351,7 +351,7 @@ Router.post('/messageSend', checkAuth, async (req, res) => {
     }
   });
 });
-Router.post('/Messageload', checkAuth, async (req, res) => {
+Router.post('/Messageload', async (req, res) => {
   const data = {
     api: 'messageLoad',
     body: req.body,

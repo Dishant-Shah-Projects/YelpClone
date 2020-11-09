@@ -27,7 +27,7 @@ class Reviews extends Component {
   }
   render() {
     let eventsdisp = null;
-    try{
+    try {
       eventsdisp = this.state.Reviews.map((eve) => {
         console.log(this.state.restaurant);
         return (
@@ -40,10 +40,9 @@ class Reviews extends Component {
           </React.Fragment>
         );
       });
+    } catch {
+      eventsdisp = <h2>Still Loading</h2>;
     }
-  catch {
-    eventsdisp=(<h2>Still Loading</h2>)
-  }
 
     return (
       <Container>

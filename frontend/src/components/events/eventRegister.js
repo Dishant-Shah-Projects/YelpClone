@@ -59,7 +59,7 @@ class Regevent extends Component {
           });
         }
       });
-      return false;
+    return false;
   };
 
   render() {

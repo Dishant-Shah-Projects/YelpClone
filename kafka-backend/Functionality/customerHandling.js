@@ -38,7 +38,7 @@ async function handle_request(msg, callback) {
     case 'profilePictureUpdate': {
       const res = {};
       try {
-        const { customerID, ProfilePicURL } = msg.query;
+        const { customerID, ProfilePicURL } = msg.body;
         Customer.findOneAndUpdate({ customerID }, {
           ProfilePicURL,
         }, (err, results) => {

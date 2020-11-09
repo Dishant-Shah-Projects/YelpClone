@@ -35,12 +35,13 @@ class MessageForm extends Component {
   };
   submitreview = () => {
     const data = {
-        restaurantID:this.state.user.restaurantID,
-        restaurantName:this.state.user.Name,
-        customerName:this.state.customer.FirstName+" "+this.state.customer.LastName,
-        Messager:"restaurant",
-        Message:this.state.review,
-        customerID:this.state.customer.customerID,
+      restaurantID: this.state.user.restaurantID,
+      restaurantName: this.state.user.Name,
+      customerName:
+        this.state.customer.FirstName + " " + this.state.customer.LastName,
+      Messager: "restaurant",
+      Message: this.state.review,
+      customerID: this.state.customer.customerID,
     };
     axios.defaults.headers.common["authorization"] = localStorage.getItem(
       "token"
@@ -63,13 +64,13 @@ class MessageForm extends Component {
           });
         }
       });
-      return false;
+    return false;
   };
 
   render() {
-      if(this.state.Registered){
-          return( <h2>Please go to the meesage tab to continue conversation</h2>);
-      }
+    if (this.state.Registered) {
+      return <h2>Please go to the meesage tab to continue conversation</h2>;
+    }
     return (
       <>
         <Form>

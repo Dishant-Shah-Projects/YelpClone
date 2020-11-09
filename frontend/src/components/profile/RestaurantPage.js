@@ -57,7 +57,6 @@ class RestaurantPage extends Component {
       });
   }
   render() {
-
     var display = null;
     if (this.state.loaded) {
       display = (
@@ -69,9 +68,7 @@ class RestaurantPage extends Component {
                 <Row>
                   <Col md={9}>
                     <Card>
-                      <Card.Title>
-                        {this.state.restinfo.Name}
-                      </Card.Title>
+                      <Card.Title>{this.state.restinfo.Name}</Card.Title>
                       <a>{this.state.restinfo.Cusine}</a>
                       <a>{this.state.restinfo.Description}</a>
                       <a>{this.state.restinfo.Location}</a>
@@ -79,8 +76,7 @@ class RestaurantPage extends Component {
 
                       <ListGroup className="list-group-flush">
                         <ListGroupItem>
-                          Phone Number:{" "}
-                          {this.state.restinfo.PhoneNo}
+                          Phone Number: {this.state.restinfo.PhoneNo}
                         </ListGroupItem>
                         <ListGroupItem>
                           Email: {this.state.restinfo.ContactEmail}
@@ -125,11 +121,7 @@ class RestaurantPage extends Component {
         </>
       );
     }
-    return (
-      <>
-        {display}
-      </>
-    );
+    return <>{display}</>;
   }
 }
 export default RestaurantPage;

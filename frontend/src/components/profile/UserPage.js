@@ -36,8 +36,8 @@ class Userpage extends Component {
       thingsilove: "",
       yelpingsince: "",
       loaded: false,
-      viewer:props.userInfo,
-      minfo:props.profileInfo,
+      viewer: props.userInfo,
+      minfo: props.profileInfo,
     };
   }
   componentDidMount() {
@@ -66,24 +66,29 @@ class Userpage extends Component {
   render() {
     console.log(this.state.userinfo);
     var display = null;
-    let follow=null;
-    let messageinit1=null;
-    let messageinit2=null;
+    let follow = null;
+    let messageinit1 = null;
+    let messageinit2 = null;
     console.log(this.state.viewer);
-    if(this.state.viewer.Role==='Customer'){
-      follow=(<Follow ID={this.state.userinfo.customerID} name={this.state.userinfo.FirstName+" "+this.state.userinfo.LastName}></Follow>);
-    }
-    else{
-      messageinit1=(
-        <Nav.Item>
-        <Nav.Link eventKey="second">Send Message</Nav.Link>
-      </Nav.Item>
+    if (this.state.viewer.Role === "Customer") {
+      follow = (
+        <Follow
+          ID={this.state.userinfo.customerID}
+          name={
+            this.state.userinfo.FirstName + " " + this.state.userinfo.LastName
+          }
+        ></Follow>
       );
-      messageinit2=(
+    } else {
+      messageinit1 = (
+        <Nav.Item>
+          <Nav.Link eventKey="second">Send Message</Nav.Link>
+        </Nav.Item>
+      );
+      messageinit2 = (
         <Tab.Pane eventKey="second">
           <MessageForm customer={this.state.userinfo}> </MessageForm>
-      </Tab.Pane>
-
+        </Tab.Pane>
       );
     }
 
@@ -101,9 +106,12 @@ class Userpage extends Component {
                 </Col>
                 <Col md={9}>
                   <Card>
-                    <Card.Title>                      {this.state.userinfo.FirstName +
+                    <Card.Title>
+                      {" "}
+                      {this.state.userinfo.FirstName +
                         " " +
-                        this.state.userinfo.LastName}</Card.Title>
+                        this.state.userinfo.LastName}
+                    </Card.Title>
                     <a>Nickname:{this.state.userinfo.Nickname}</a>
                     <a>Location:{this.state.userinfo.City}</a>
                     <a>

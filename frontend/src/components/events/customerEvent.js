@@ -38,7 +38,7 @@ class Userevents extends Component {
     this.handleupsearch = this.handleupsearch.bind(this);
     this.updateterm = this.updateterm.bind(this);
   }
-  
+
   componentDidMount() {
     console.log(this.state.user);
     const data = {

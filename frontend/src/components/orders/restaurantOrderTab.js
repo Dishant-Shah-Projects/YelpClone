@@ -1,6 +1,14 @@
 import React, { Component } from "react";
 import "../../App.css";
-import { Container, Card, Row, Col, Button, Form,Pagination } from "react-bootstrap";
+import {
+  Container,
+  Card,
+  Row,
+  Col,
+  Button,
+  Form,
+  Pagination,
+} from "react-bootstrap";
 import cookie from "react-cookies";
 import axios from "axios";
 import "bootstrap/dist/js/bootstrap.bundle.min";
@@ -9,6 +17,7 @@ import ROrder from "./RestaurantOrder";
 import { backendURL } from "../../config";
 import { connect } from "react-redux";
 import { order } from "../../Redux/constants/actiontypes";
+import { Link } from "react-router-dom";
 // Orders page for restaurants
 class RestaurantOrder extends Component {
   constructor(ownprops) {
@@ -30,29 +39,33 @@ class RestaurantOrder extends Component {
   }
   componentDidMount() {
     console.log(this.state.dispOrders);
-    if(this.state.dispOrders.length===0){
-    const data = {
-      restaurantID: this.state.restaurant.ID,
-      Filtered:false,
-      PageNo:0,
-    };
-    console.log(data);
-    axios.defaults.headers.common["authorization"] = localStorage.getItem(
-      "token"
-    );
-    axios
-      .post(backendURL + "/restaurant/orders", data)
+    if (this.state.dispOrders.length === 0) {
+      const data = {
+        restaurantID: this.state.restaurant.ID,
+        Filtered: false,
+        PageNo: 0,
+      };
+      console.log(data);
+      axios.defaults.headers.common["authorization"] = localStorage.getItem(
+        "token"
+      );
+      axios
+        .post(backendURL + "/restaurant/orders", data)
 
-      .then((response) => {
-        //update the state with the response data
-        console.log(response.data);
-        this.setState({
-          Orders: response.data,
-          dispOrders: response.data,
+        .then((response) => {
+          //update the state with the response data
+          console.log(response.data);
+          this.setState({
+            Orders: response.data,
+            dispOrders: response.data,
+          });
+          let info = {
+            orders: response.data,
+            PageNo: this.state.PageNo,
+            Pages: this.state.Pages,
+          };
+          this.props.orders(info);
         });
-        let info={orders:response.data, PageNo:this.state.PageNo, Pages: this.state.Pages};
-        this.props.orders(info);
-      });
     }
   }
   updateterm = (e) => {
@@ -65,11 +78,11 @@ class RestaurantOrder extends Component {
       term2: e.target.value,
     });
   };
-  pageup=()=> {
+  pageup = () => {
     const data = {
       restaurantID: this.state.restaurant.ID,
-      Filtered:false,
-      PageNo:this.state.PageNo+1,
+      Filtered: false,
+      PageNo: this.state.PageNo + 1,
     };
     console.log(data);
     axios.defaults.headers.common["authorization"] = localStorage.getItem(
@@ -85,17 +98,21 @@ class RestaurantOrder extends Component {
           Orders: response.data,
           dispOrders: response.data,
           Pages: response.data[0],
-          PageNo:this.state.PageNo+1,
+          PageNo: this.state.PageNo + 1,
         });
-        let info={orders:response.data, PageNo:this.state.PageNo, Pages: this.state.Pages};
+        let info = {
+          orders: response.data,
+          PageNo: this.state.PageNo,
+          Pages: this.state.Pages,
+        };
         this.props.orders(info);
       });
-  }
-  pagedown=()=> {
+  };
+  pagedown = () => {
     const data = {
       restaurantID: this.state.restaurant.ID,
-      Filtered:false,
-      PageNo:this.state.PageNo-1,
+      Filtered: false,
+      PageNo: this.state.PageNo - 1,
     };
     axios.defaults.headers.common["authorization"] = localStorage.getItem(
       "token"
@@ -110,39 +127,43 @@ class RestaurantOrder extends Component {
           Orders: response.data,
           dispOrders: response.data,
           Pages: response.data[0],
-          PageNo:this.state.PageNo-1,
+          PageNo: this.state.PageNo - 1,
         });
-        let info={orders:response.data, PageNo:this.state.PageNo, Pages: this.state.Pages};
+        let info = {
+          orders: response.data,
+          PageNo: this.state.PageNo,
+          Pages: this.state.Pages,
+        };
         this.props.orders(info);
       });
-  }
+  };
 
   render() {
     let eventsdisp = null;
-    try{
+    try {
+      eventsdisp = this.state.dispOrders[1].map((eve) => {
+        console.log(eve.RestaurantEmail);
+        return (
+          <React.Fragment>
+            <Card>
+              <Card.Title>Customer: {eve.customerName}</Card.Title>
+              <Link to={{ pathname: "/user", state: { foo: eve.customerID } }}>
+              {eve.restaurantName}
+                    </Link>
+              <Card.Body>
+                <a>Order Status: {eve.OrderStatus}</a>
+                <br />
+                <a>Order Time: {eve.OrderDateTime}</a>
+              </Card.Body>
 
-    
-    eventsdisp = this.state.dispOrders[1].map((eve) => {
-      console.log(eve.RestaurantEmail);
-      return (
-        <React.Fragment>
-          <Card>
-            <Card.Title>Customer: {eve.restaurantName}</Card.Title>
-            <Card.Body>
-              <a>Order Status: {eve.OrderStatus}</a>
-              <br />
-              <a>Order Time: {eve.OrderDateTime}</a>
-            </Card.Body>
-
-            <ROrder orderinfo={eve} />
-          </Card>
-        </React.Fragment>
-      );
-    });
-  }
-  catch{
-    eventsdisp=(<h1>loading orders</h1>)
-  }
+              <ROrder orderinfo={eve} />
+            </Card>
+          </React.Fragment>
+        );
+      });
+    } catch {
+      eventsdisp = <h1>loading orders</h1>;
+    }
     return (
       <Container>
         <h1>Orders</h1>
@@ -162,10 +183,12 @@ class RestaurantOrder extends Component {
           </Col>
         </Row>
         <Pagination>
-        <Pagination.Prev onClick={this.pagedown} />
-        <Pagination.Item disabled>{this.state.PageNo+"/"+this.state.Pages}</Pagination.Item>
+          <Pagination.Prev onClick={this.pagedown} />
+          <Pagination.Item disabled>
+            {this.state.PageNo + "/" + this.state.Pages}
+          </Pagination.Item>
 
-        <Pagination.Next onClick={this.pageup} />
+          <Pagination.Next onClick={this.pageup} />
         </Pagination>
         {eventsdisp}
       </Container>
@@ -176,14 +199,14 @@ class RestaurantOrder extends Component {
 const mapStateToProps = (state, ownprops) => {
   console.log(state.LoginReducer.userInfo);
   const userInfo = state.LoginReducer.userInfo;
-  const orderinfo=state.orderReducer.orderinfo;
-  if(orderinfo.PageNo===-1 ){
-    orderinfo.PageNo=0;
-    orderinfo.Pages=0;
+  const orderinfo = state.orderReducer.orderinfo;
+  if (orderinfo.PageNo === -1) {
+    orderinfo.PageNo = 0;
+    orderinfo.Pages = 0;
   }
   return {
     userInfo: userInfo,
-    orderinfo:orderinfo,
+    orderinfo: orderinfo,
   };
 };
 

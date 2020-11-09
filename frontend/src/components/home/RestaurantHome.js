@@ -21,7 +21,7 @@ import RestaurantPickUpload from "./Restaurantpicadd";
 import { backendURL } from "../../config";
 import { profile } from "../../Redux/constants/actiontypes";
 import { connect } from "react-redux";
-import MenuPage from "./menuPage"
+import MenuPage from "./menuPage";
 class RestHome extends Component {
   constructor(ownprops) {
     super(ownprops);
@@ -31,27 +31,27 @@ class RestHome extends Component {
     };
   }
   componentDidMount() {
-    console.log(this.state.restinfo);
-    if(Object.keys(this.state.restinfo).length === 0){
-    axios.defaults.headers.common["authorization"] = localStorage.getItem(
-      "token"
-    );
-    axios
-      .get(backendURL + "/restaurant/profile", {
-        params: {
-          restaurantID: this.state.user.ID,
-        },
-        withCredentials: true,
-      })
-      .then((response) => {
-        //update the state with the response data
-        console.log(response);
-        console.log(response.status);
-        this.props.profile(response.data);
-        this.setState({
-          restinfo: response.data,
+    console.log(this.state.user);
+    if (Object.keys(this.state.restinfo).length === 0) {
+      axios.defaults.headers.common["authorization"] = localStorage.getItem(
+        "token"
+      );
+      axios
+        .get(backendURL + "/restaurant/profile", {
+          params: {
+            restaurantID: this.state.user.ID,
+          },
+          withCredentials: true,
+        })
+        .then((response) => {
+          //update the state with the response data
+          console.log(response);
+          console.log(response.status);
+          this.props.profile(response.data);
+          this.setState({
+            restinfo: response.data,
+          });
         });
-      });
     }
   }
   render() {
@@ -135,10 +135,10 @@ class RestHome extends Component {
 const mapStateToProps = (state, ownprops) => {
   console.log(state.LoginReducer.userInfo);
   const userInfo = state.LoginReducer.userInfo;
-  const restInfo=state.profilereducer.profileinfo
+  const restInfo = state.profilereducer.profileinfo;
   return {
     userInfo: userInfo,
-    restInfo:restInfo,
+    restInfo: restInfo,
   };
 };
 

@@ -1,6 +1,12 @@
 import React, { Component } from "react";
 import cookie from "react-cookies";
-import { Button, Form, Container, FormGroup,Pagination } from "react-bootstrap";
+import {
+  Button,
+  Form,
+  Container,
+  FormGroup,
+  Pagination,
+} from "react-bootstrap";
 import "bootstrap/dist/css/bootstrap.min.css";
 import axios from "axios";
 import Menuitem from "./menuItem.js";
@@ -18,8 +24,8 @@ class Menu extends Component {
       OrderType: "Delivery",
       useremail: props.userInfo,
       OrderSubmitted: false,
-      PageNo:0,
-      Pages:0,
+      PageNo: 0,
+      Pages: 0,
     };
     this.addtocarr = this.addtocarr.bind(this);
     this.submitorder = this.submitorder.bind(this);
@@ -30,7 +36,7 @@ class Menu extends Component {
   componentDidMount() {
     const data = {
       restaurantID: this.state.Restaurant.restaurantID,
-      PageNo:0,
+      PageNo: 0,
     };
     axios.defaults.headers.common["authorization"] = localStorage.getItem(
       "token"
@@ -43,15 +49,14 @@ class Menu extends Component {
         console.log(response.data);
         this.setState({
           Restmenu: response.data[1],
-          Pages:response.data[0],
-
+          Pages: response.data[0],
         });
       });
   }
-  pageup=()=> {
+  pageup = () => {
     const data = {
-      restaurantID: this.state.Restaurant,
-      PageNo:this.state.PageNo+1,
+      restaurantID: this.state.Restaurant.restaurantID,
+      PageNo: this.state.PageNo + 1,
     };
     axios.defaults.headers.common["authorization"] = localStorage.getItem(
       "token"
@@ -64,15 +69,15 @@ class Menu extends Component {
         console.log(response.data);
         this.setState({
           Restmenu: response.data[1],
-          Pages:response.data[0],
-          PageNo:this.state.PageNo+1,
+          Pages: response.data[0],
+          PageNo: this.state.PageNo + 1,
         });
       });
-  }
-  pagedown=()=> {
+  };
+  pagedown = () => {
     const data = {
-      restaurantID: this.state.Restaurant,
-      PageNo:this.state.PageNo-1,
+      restaurantID: this.state.Restaurant.restaurantID,
+      PageNo: this.state.PageNo - 1,
     };
     axios.defaults.headers.common["authorization"] = localStorage.getItem(
       "token"
@@ -85,11 +90,11 @@ class Menu extends Component {
         console.log(response.data);
         this.setState({
           Restmenu: response.data[1],
-          Pages:response.data[0],
-          PageNo:this.state.PageNo-1,
+          Pages: response.data[0],
+          PageNo: this.state.PageNo - 1,
         });
       });
-  }
+  };
   addtocarr = (e) => {
     var copy = [...this.state.Cart];
     console.log(e);
@@ -111,16 +116,17 @@ class Menu extends Component {
     event.preventDefault();
     console.log(this.state.OrderType);
     const data = {
-      restaurantID:this.state.Restaurant.restaurantID,
-      restaurantName:this.state.Restaurant.Name,
-      customerID:this.state.useremail.customerID,
-      customerName:this.state.useremail.FirstName+" "+this.state.useremail.LastName,
+      restaurantID: this.state.Restaurant.restaurantID,
+      restaurantName: this.state.Restaurant.Name,
+      customerID: this.state.useremail.customerID,
+      customerName:
+        this.state.useremail.FirstName + " " + this.state.useremail.LastName,
       Items: this.state.Cart,
       OrderType: this.state.OrderType,
     };
     console.log(data);
     axios
-      .post(backendURL+"/customer/restaurantaddOrder", data)
+      .post(backendURL + "/customer/restaurantaddOrder", data)
 
       .then((response) => {
         //update the state with the response data
@@ -140,7 +146,7 @@ class Menu extends Component {
         </React.Fragment>
       );
     });
-    let menus =null;
+    let menus = null;
 
     if (this.state.OrderSubmitted) {
       return (
@@ -157,10 +163,12 @@ class Menu extends Component {
         <h1> Menu</h1>
 
         <Pagination>
-        <Pagination.Prev onClick={this.pagedown} />
-        <Pagination.Item disabled>{this.state.PageNo+"/"+this.state.Pages}</Pagination.Item>
+          <Pagination.Prev onClick={this.pagedown} />
+          <Pagination.Item disabled>
+            {this.state.PageNo + "/" + this.state.Pages}
+          </Pagination.Item>
 
-        <Pagination.Next onClick={this.pageup} />
+          <Pagination.Next onClick={this.pageup} />
         </Pagination>
         {appitizers}
 

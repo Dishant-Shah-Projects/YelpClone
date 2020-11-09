@@ -19,6 +19,15 @@ const options = {
   bufferMaxEntries: 0,
   useFindAndModify: false,
 };
+// single connection
+// eslint-disable-next-line no-unused-vars
+const options2 = {
+  useNewUrlParser: true,
+  useUnifiedTopology: true,
+  poolSize: 1,
+  bufferMaxEntries: 0,
+  useFindAndModify: false,
+};
 
 // eslint-disable-next-line no-unused-vars
 mongoose.connect(mongoDB, options, (err, res) => {
@@ -40,6 +49,7 @@ function handleTopicRequest(topic_name, fname) {
     console.log(`message received for ${topic_name} `, fname);
     console.log(JSON.stringify(message.value));
     const data = JSON.parse(message.value);
+
     fname.handle_request(data.data, (err, res) => {
       console.log(`after handle${res}`);
       const payloads = [

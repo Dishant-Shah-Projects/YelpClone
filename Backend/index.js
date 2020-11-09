@@ -52,5 +52,5 @@ app.use('/general', commonPart);
 app.use('/restaurant', restaurantRoute);
 
 app.use('/customer', customerRoute);
-
+module.exports = app;
 app.listen(3001);
