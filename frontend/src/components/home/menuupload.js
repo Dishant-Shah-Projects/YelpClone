@@ -70,11 +70,7 @@ class AddMenu extends Component {
     //prevent page from refresh
     e.preventDefault();
     const formData = new FormData();
-    formData.append(
-      "food",
-      this.state.Itemimg,
-      this.state.Itemimg.name
-    );
+    formData.append("food", this.state.Itemimg, this.state.Itemimg.name);
     formData.append("restaurantID", this.state.RestaurantEmail);
     formData.append("DishName", this.state.ItemName);
     formData.append("ItemCost", this.state.ItemCost);
@@ -89,7 +85,7 @@ class AddMenu extends Component {
       "token"
     );
     axios
-      .post(backendURL+"/restaurant/menuAdd", formData)
+      .post(backendURL + "/restaurant/menuAdd", formData)
 
       .then((response) => {
         //update the state with the response data

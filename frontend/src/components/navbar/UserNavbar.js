@@ -14,8 +14,11 @@ class Navbar2 extends Component {
     this.handleLogout = this.handleLogout.bind(this);
   }
   componentDidMount() {
-    if ((this.state.user.ID==="") &&(localStorage.getItem("userId"))){
-      let userInfo = { Role: localStorage.getItem("userrole"), ID: localStorage.getItem("userId") };
+    if (this.state.user.ID === "" && localStorage.getItem("userId")) {
+      let userInfo = {
+        Role: localStorage.getItem("userrole"),
+        ID: localStorage.getItem("userId"),
+      };
       this.props.login(userInfo);
     }
   }
@@ -72,6 +75,12 @@ class Navbar2 extends Component {
               </Nav.Link>
               <Nav.Link>
                 <Link to="/events">Events</Link>
+              </Nav.Link>
+              <Nav.Link>
+                <Link to="/customerSearch">Customers</Link>
+              </Nav.Link>
+              <Nav.Link>
+                <Link to="/messages">Messages</Link>
               </Nav.Link>
             </Nav>
             {navLogin}

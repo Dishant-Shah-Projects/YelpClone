@@ -1,14 +1,17 @@
-import { order, orderupdate,addorder } from "../constants/actiontypes";
+import { menuload } from "../constants/actiontypes";
 const defaultState = {
-  orders: [
-  ]
+  menuinfo:{
+  menu: [],
+  PageNo:-1,
+  Pages:-1,
+  }
 };
-const orderReducer = (state = defaultState, action) => {
+const menuReducer = (state = defaultState, action) => {
   switch (action.type) {
-    case order: {
+    case menuload: {
       return {
         ...state,
-        orders: [  ...action.payload ],
+        menuinfo: {...action.payload},
         //   return Object.assign(state, action.payload);
       };
     }
@@ -17,4 +20,4 @@ const orderReducer = (state = defaultState, action) => {
     }
   }
 };
-export default orderReducer;
+export default menuReducer;

@@ -4,7 +4,7 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import UserOrders from "./CustomerOrder";
 import RestaurantOrders from "./restaurantOrderTab";
 import Navbar2 from "../navbar/UserNavbar";
-import Navbar3 from "../navbar/RestaurantNavbar"
+import Navbar3 from "../navbar/RestaurantNavbar";
 import { backendURL } from "../../config";
 class OrdersPage extends Component {
   render() {
@@ -12,17 +12,19 @@ class OrdersPage extends Component {
 
     //if not logged in go to login page
     if (localStorage.getItem("userrole") === "Customer") {
-      return( <>
-      <Navbar2></Navbar2>
-      <UserOrders></UserOrders>
+      return (
+        <>
+          <Navbar2></Navbar2>
+          <UserOrders></UserOrders>
         </>
-        );
+      );
     } else if (localStorage.getItem("userrole") === "Restaurant") {
-      return( <>
-        <Navbar3></Navbar3>
-        <RestaurantOrders></RestaurantOrders>
-          </>
-          );
+      return (
+        <>
+          <Navbar3></Navbar3>
+          <RestaurantOrders></RestaurantOrders>
+        </>
+      );
     } else {
       return <Redirect to="/login" />;
     }

@@ -34,7 +34,7 @@ class ProfilePicUpload extends Component {
       "token"
     );
     axios
-      .post(backendURL+"/customer/profilePicture", formData)
+      .post(backendURL + "/customer/profilePicture", formData)
 
       .then((response) => {
         //update the state with the response data

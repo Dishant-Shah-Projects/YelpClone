@@ -1,15 +1,15 @@
 import React, { Component } from "react";
 
-import { Button, Form, Card, Row, Col } from "react-bootstrap";
+import { Button, Form, Card, Row, Col,Image } from "react-bootstrap";
 import "bootstrap/dist/css/bootstrap.min.css";
-
+import { backendURL } from "../../config";
 class Menuitem extends Component {
   constructor(props) {
     super(props);
     this.state = {
       iteminfo: props.iteminfo,
       quantity: 0,
-      cost: props.iteminfo.ItemCost,
+      cost: props.iteminfo.DishPrice,
       total: 0,
     };
     this.quantityChangeHandler = this.quantityChangeHandler.bind(this);
@@ -22,20 +22,22 @@ class Menuitem extends Component {
     });
   };
   addtocart = (e) => {
-    this.props.action([
-      this.state.iteminfo.ItemName,
-      this.state.quantity,
-      this.state.total,
-    ]);
+    this.props.action({
+      ItemID:this.state.iteminfo.ItemID,
+      DishName:this.state.iteminfo.DishName,
+      DishPrice:this.state.total,
+      DishQuantity:this.state.quantity,
+    });
   };
   render() {
     return (
       <>
         <Card>
           <Form>
+          <Col>
             <Row>
               <Col>
-                <a>{this.state.iteminfo.ItemName}</a>
+                <a>{this.state.iteminfo.DishName}</a>
               </Col>
               <Col>
                 <input
@@ -52,12 +54,18 @@ class Menuitem extends Component {
               </Col>
             </Row>
             <Row>
-              <a>{this.state.iteminfo.ItemDesc}</a>{" "}
+              <a>{this.state.iteminfo.Description}</a>{" "}
             </Row>
             <Row>
-              <a>{this.state.iteminfo.Cat}</a>
+              <a>{this.state.iteminfo.Category}</a>
             </Row>
-            <a>{this.state.iteminfo.MainIngredients}</a>
+            <a>{this.state.iteminfo.Mainingredients}</a>
+            <br/>
+            <a>Price: ${this.state.iteminfo.DishPrice}</a>
+            </Col>
+            <Col>
+              <Image src={backendURL+"/images/"+this.state.iteminfo.DishIMG} style={{ width: 150, height: 150 }}></Image>
+            </Col>
           </Form>
         </Card>
       </>

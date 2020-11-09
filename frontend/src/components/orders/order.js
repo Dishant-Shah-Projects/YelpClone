@@ -14,12 +14,19 @@ class Order extends Component {
     };
     console.log(this.state);
   }
+  componentDidUpdate(prevProps) {
+    if (prevProps.Orderinfo !== this.props.Orderinfo) {
+      this.setState({
+        Orderinfo: this.props.Orderinfo,
+      });
+    }
+  }
 
   render() {
     var Output = null;
     var total = 0;
-    if (this.state.Orderinfo.Items.length!==0) {
-      Output = this.state.Orderitems.Items.map((eve) => {
+    if (this.state.Orderinfo.Items.length !== 0) {
+      Output = this.state.Orderinfo.Items.map((eve) => {
         total = total + eve.DishPrice;
         return (
           <React.Fragment>

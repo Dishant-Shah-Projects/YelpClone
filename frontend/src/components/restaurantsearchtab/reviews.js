@@ -12,23 +12,22 @@ class Reviews extends Component {
     super(props);
     this.state = {
       restaurant: props.restaurant,
-      Reviews: [],
+      Reviews: props.restaurant.Reviews,
     };
     console.log(props.restaurant);
   }
-  componentDidMount() {
-  }
+  componentDidMount() {}
   componentDidUpdate(prevProps) {
     if (prevProps.restaurant !== this.props.restaurant) {
       this.setState({
         restaurant: this.props.restaurant,
-        Reviews:this.props.restaurant.Reviews
+        Reviews: this.props.restaurant.Reviews,
       });
     }
   }
   render() {
     let eventsdisp = null;
-    if (this.state.Reviews !== []) {
+    try{
       eventsdisp = this.state.Reviews.map((eve) => {
         console.log(this.state.restaurant);
         return (
@@ -42,6 +41,9 @@ class Reviews extends Component {
         );
       });
     }
+  catch {
+    eventsdisp=(<h2>Still Loading</h2>)
+  }
 
     return (
       <Container>

@@ -68,13 +68,13 @@ class ProfileUpdate extends Component {
     axios.defaults.headers.common["authorization"] = localStorage.getItem(
       "token"
     );
-    axios.post(backendURL+"/customer/profileAbout", data).then((response) => {
+    axios.post(backendURL + "/customer/profileAbout", data).then((response) => {
       console.log("Status Code : ", response.status);
       if (response.status === 200) {
         this.setState({
           authFlag: true,
         });
-        let userInfo =data;
+        let userInfo = data;
         this.props.profileupdate(userInfo);
       } else {
         this.setState({

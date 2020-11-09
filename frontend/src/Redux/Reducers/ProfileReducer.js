@@ -1,4 +1,4 @@
-import { profile,profileupdate } from "../constants/actiontypes";
+import { profile, profileupdate } from "../constants/actiontypes";
 const defaultState = {
   profileinfo: {},
 };
@@ -14,7 +14,7 @@ const profilereducer = (state = defaultState, action) => {
     case profileupdate: {
       return {
         ...state,
-        profileinfo: {...state.profileinfo, ...action.payload },
+        profileinfo: { ...state.profileinfo, ...action.payload },
         //   return Object.assign(state, action.payload);
       };
     }

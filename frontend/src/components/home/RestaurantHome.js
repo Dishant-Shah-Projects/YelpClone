@@ -21,16 +21,18 @@ import RestaurantPickUpload from "./Restaurantpicadd";
 import { backendURL } from "../../config";
 import { profile } from "../../Redux/constants/actiontypes";
 import { connect } from "react-redux";
+import MenuPage from "./menuPage"
 class RestHome extends Component {
   constructor(ownprops) {
     super(ownprops);
     this.state = {
-      user: this.props.userInfo,
-      restinfo: "",
+      user: ownprops.userInfo,
+      restinfo: ownprops.restInfo,
     };
   }
   componentDidMount() {
-    console.log(this.state.user);
+    console.log(this.state.restinfo);
+    if(Object.keys(this.state.restinfo).length === 0){
     axios.defaults.headers.common["authorization"] = localStorage.getItem(
       "token"
     );
@@ -45,13 +47,14 @@ class RestHome extends Component {
         //update the state with the response data
         console.log(response);
         console.log(response.status);
+        this.props.profile(response.data);
         this.setState({
           restinfo: response.data,
         });
       });
+    }
   }
   render() {
-
     return (
       <React.Fragment>
         <div></div>
@@ -61,10 +64,7 @@ class RestHome extends Component {
               <Row>
                 <Col md={9}>
                   <Card>
-                    <Card.Title>
-                      {" "}
-                      {this.state.restinfo.Name}
-                    </Card.Title>
+                    <Card.Title> {this.state.restinfo.Name}</Card.Title>
                     <a> {this.state.restinfo.Cusine}</a>
                     <a> {this.state.restinfo.Description}</a>
                     <a>{this.state.restinfo.Location}</a>
@@ -72,8 +72,7 @@ class RestHome extends Component {
 
                     <ListGroup className="list-group-flush">
                       <ListGroupItem>
-                        Phone Number:{" "}
-                        {this.state.restinfo.PhoneNo}
+                        Phone Number: {this.state.restinfo.PhoneNo}
                       </ListGroupItem>
                       <ListGroupItem>
                         Email: {this.state.restinfo.ContactEmail}
@@ -90,6 +89,9 @@ class RestHome extends Component {
                 <Nav variant="pills" className="flex-column">
                   <Nav.Item>
                     <Nav.Link eventKey="first">Reviews</Nav.Link>
+                  </Nav.Item>
+                  <Nav.Item>
+                    <Nav.Link eventKey="fifth">Menu</Nav.Link>
                   </Nav.Item>
                   <Nav.Item>
                     <Nav.Link eventKey="second">Update Info</Nav.Link>
@@ -116,6 +118,9 @@ class RestHome extends Component {
                   <Tab.Pane eventKey="fourth">
                     <AddMenu></AddMenu>
                   </Tab.Pane>
+                  <Tab.Pane eventKey="fifth">
+                    <MenuPage rest={this.state.restinfo}></MenuPage>
+                  </Tab.Pane>
                 </Tab.Content>
               </Col>
             </Row>
@@ -130,8 +135,10 @@ class RestHome extends Component {
 const mapStateToProps = (state, ownprops) => {
   console.log(state.LoginReducer.userInfo);
   const userInfo = state.LoginReducer.userInfo;
+  const restInfo=state.profilereducer.profileinfo
   return {
     userInfo: userInfo,
+    restInfo:restInfo,
   };
 };
 

@@ -4,6 +4,8 @@ import axios from "axios";
 import { Form, Button, Container, Accordion, Table } from "react-bootstrap";
 import "bootstrap/dist/css/bootstrap.min.css";
 import { backendURL } from "../../config";
+import { connect } from "react-redux";
+import { orderupdate } from "../../Redux/constants/actiontypes";
 // Class component for each Order under Orders for Restaurant
 class ROrder extends Component {
   constructor(props) {
@@ -12,13 +14,20 @@ class ROrder extends Component {
       Orderinfo: props.orderinfo,
       Orderitems: [],
       Orderstate: props.orderinfo.OrderStatus,
+      
     };
 
     console.log(this.state);
     this.updateterm = this.updateterm.bind(this);
     this.handleupdate = this.handleupdate.bind(this);
   }
-  componentDidMount() {
+  componentDidUpdate(prevProps) {
+    if (prevProps.orderinfo !== this.props.orderinfo) {
+      this.setState({
+        Orderinfo: this.props.orderinfo,
+        Orderstate: this.props.orderinfo.OrderStatus,
+      });
+    }
   }
 
   updateterm = (e) => {
@@ -32,22 +41,26 @@ class ROrder extends Component {
       OrderStatus: this.state.Orderstate,
     };
     axios
-      .post(backendURL+"/restaurant/orderUpdate", data2)
+      .post(backendURL + "/restaurant/orderUpdate", data2)
 
       .then((response) => {
         //update the state with the response data
         console.log(response.data);
         console.log("Status Code : ", response.status);
+        let temp =this.state.Orderinfo;
+        temp.OrderStatus=this.state.Orderstate;
+        this.props.orderupdate(temp);
       });
   };
 
   render() {
     var Output = null;
     console.log(this.state.Orderitems);
-    console.log(this.state.Orderinfo.OrderNo);
+    console.log(this.state.Orderinfo.Items);
     var total = 0;
-    if (this.state.Orderinfo.Items.length!==0) {
-      Output = this.state.Orderitems.map((eve) => {
+    try{
+    if (this.state.Orderinfo.Items.length !== 0) {
+      Output = this.state.Orderinfo.Items.map((eve) => {
         total = total + eve.DishPrice;
         return (
           <React.Fragment>
@@ -60,6 +73,10 @@ class ROrder extends Component {
         );
       });
     }
+  }
+  catch{
+
+  }
     let optionvalue = null;
     if (this.state.Orderinfo.OrderType === "delivery") {
       optionvalue = (
@@ -121,4 +138,25 @@ class ROrder extends Component {
     );
   }
 }
-export default ROrder;
+const mapStateToProps = (state, ownprops) => {
+  console.log(state.LoginReducer.userInfo);
+  const userInfo = state.LoginReducer.userInfo;
+
+  return {
+    userInfo: userInfo,
+  };
+};
+
+const mapDispatchToProps = (dispatch) => {
+  return {
+    orderupdate: (payload) => {
+      dispatch({
+        type: orderupdate,
+        payload,
+      });
+    },
+  };
+};
+
+//export Login Component
+export default connect(mapStateToProps, mapDispatchToProps)(ROrder);

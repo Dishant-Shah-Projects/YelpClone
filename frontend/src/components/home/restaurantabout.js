@@ -6,6 +6,8 @@ import { Form, Button } from "react-bootstrap";
 import "bootstrap/dist/css/bootstrap.min.css";
 import cookie from "react-cookies";
 import { backendURL } from "../../config";
+import { profileupdate } from "../../Redux/constants/actiontypes";
+import { connect } from "react-redux";
 class ProfileUpdate3 extends Component {
   constructor(ownprops) {
     super(ownprops);
@@ -91,14 +93,13 @@ class ProfileUpdate3 extends Component {
     //prevent page from refresh
     e.preventDefault();
     const data = {
-      Name: this.state.RestaurantName,
       Cusine: this.state.RestaurantCusine,
       Description: this.state.RestaurantDescription,
       ContactEmail: this.state.RestaurantPublicEmail,
       PhoneNo: this.state.RestaurantPublicPhone,
       Hours: this.state.RestaurantHours,
       restaurantID: this.state.RestaurantEmail,
-      Location: this.state.RestaurantLocation,
+      PickMethod: this.state.RestaurantLocation,
     };
 
     console.log(data);
@@ -107,10 +108,12 @@ class ProfileUpdate3 extends Component {
     axios.defaults.withCredentials = true;
     //make a post request with the user data
     axios
-      .post(backendURL+"/restaurant/profileUpdate", data)
+      .post(backendURL + "/restaurant/profileUpdate", data)
       .then((response) => {
         console.log("Status Code : ", response.status);
         if (response.status === 200) {
+          let userInfo = data;
+          this.props.profileupdate(userInfo);
           this.setState({
             authFlag: true,
           });
@@ -127,12 +130,6 @@ class ProfileUpdate3 extends Component {
       <>
         <br />
         <Form>
-          <Form.Label>Restaurant Name</Form.Label>
-          <Form.Control
-            type="text"
-            placeholder="Name"
-            onChange={this.RestaurantNameChangeHandler}
-          />
           <Form.Label>Cusine</Form.Label>
           <Form.Control
             type="text"
@@ -163,7 +160,7 @@ class ProfileUpdate3 extends Component {
             placeholder="Normal text"
             onChange={this.RestaurantHoursChangeHandler}
           />
-          <Form.Label>Location</Form.Label>
+          <Form.Label>PickMethod</Form.Label>
           <Form.Control
             type="text"
             placeholder="Normal text"
@@ -179,4 +176,24 @@ class ProfileUpdate3 extends Component {
   }
 }
 
-export default ProfileUpdate3;
+const mapStateToProps = (state, ownprops) => {
+  console.log(state.LoginReducer.userInfo);
+  const userInfo = state.LoginReducer.userInfo;
+  return {
+    userInfo: userInfo,
+  };
+};
+
+const mapDispatchToProps = (dispatch) => {
+  return {
+    profileupdate: (payload) => {
+      dispatch({
+        type: profileupdate,
+        payload,
+      });
+    },
+  };
+};
+
+//export Login Component
+export default connect(mapStateToProps, mapDispatchToProps)(ProfileUpdate3);

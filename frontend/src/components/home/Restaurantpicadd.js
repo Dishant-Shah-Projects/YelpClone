@@ -33,7 +33,7 @@ class RestaurantPickUpload extends Component {
       "token"
     );
     axios
-      .post(backendURL+"/profilepictureupload", formData)
+      .post(backendURL + "/profilepictureupload", formData)
 
       .then((response) => {
         //update the state with the response data

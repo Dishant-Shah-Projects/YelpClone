@@ -16,36 +16,44 @@ import cookie from "react-cookies";
 import { Link } from "react-router-dom";
 import axios from "axios";
 import Navbar2 from "../navbar/UserNavbar";
-import Navbar3 from "../navbar/RestaurantNavbar"
+import Navbar3 from "../navbar/RestaurantNavbar";
 import "bootstrap/dist/js/bootstrap.bundle.min";
 import "bootstrap/dist/css/bootstrap.min.css";
 import download from "./download.png";
 import { backendURL } from "../../config";
-
+import Follow from "./followButton";
+import { connect } from "react-redux";
+import { profile } from "../../Redux/constants/actiontypes";
+import MessageForm from "./messageForm";
 class Userpage extends Component {
   constructor(props) {
     super(props);
     this.state = {
       customer: props.location.state.foo,
-      Restaurant: cookie.load("user"),
       userinfo: [],
       userimage: null,
       findmein: "",
       thingsilove: "",
       yelpingsince: "",
       loaded: false,
+      viewer:props.userInfo,
+      minfo:props.profileInfo,
     };
   }
   componentDidMount() {
     const data = {
-      username: this.state.customer,
+      customerID: this.state.customer,
     };
     axios.defaults.headers.common["authorization"] = localStorage.getItem(
       "token"
     );
     axios
-      .post(backendURL+"/customerprofile", data)
-
+      .get(backendURL + "/customer/customerProfile", {
+        params: {
+          customerID: this.state.customer,
+        },
+        withCredentials: true,
+      })
       .then((response) => {
         //update the state with the response data
         console.log(response.data);
@@ -54,50 +62,32 @@ class Userpage extends Component {
           loaded: true,
         });
       });
-    axios
-      .post("http://localhost:3001/profilepic", data)
-
-      .then((response) => {
-        //update the state with the response data
-
-        if (response.data) {
-          this.setState({
-            userimage:
-              "http://localhost:3001/images/" + response.data[0].profilepicture,
-          });
-        } else {
-          this.setState({
-            userimage: download,
-          });
-        }
-      });
-    const data2 = {
-      userEmail: this.state.customer,
-    };
-    console.log(data2);
-    axios.post("http://localhost:3001/about", data2).then((response) => {
-      console.log("Status Code : ", response.status);
-      console.log(response.data);
-      if (response.status === 200) {
-        console.log(response.data);
-        this.setState({
-          findmein: response.data.findmein,
-          thingsilove: response.data.thingsilove,
-          yelpingsince: response.data.yelpingsince,
-        });
-      } else {
-        this.setState({
-          err: "Error with inputting information",
-        });
-      }
-    });
   }
   render() {
     console.log(this.state.userinfo);
-    var outlook = this.state.userinfo[0];
     var display = null;
+    let follow=null;
+    let messageinit1=null;
+    let messageinit2=null;
+    console.log(this.state.viewer);
+    if(this.state.viewer.Role==='Customer'){
+      follow=(<Follow ID={this.state.userinfo.customerID} name={this.state.userinfo.FirstName+" "+this.state.userinfo.LastName}></Follow>);
+    }
+    else{
+      messageinit1=(
+        <Nav.Item>
+        <Nav.Link eventKey="second">Send Message</Nav.Link>
+      </Nav.Item>
+      );
+      messageinit2=(
+        <Tab.Pane eventKey="second">
+          <MessageForm customer={this.state.userinfo}> </MessageForm>
+      </Tab.Pane>
+
+      );
+    }
+
     if (this.state.loaded) {
-      console.log(outlook);
       display = (
         <Container>
           <Jumbotron fluid>
@@ -111,27 +101,21 @@ class Userpage extends Component {
                 </Col>
                 <Col md={9}>
                   <Card>
-                    <Card.Title>{this.state.userinfo.User_name}</Card.Title>
-                    <a>Nickname:{this.state.userinfo.nickname}</a>
-                    <a>Location:{this.state.userinfo.city}</a>
+                    <Card.Title>                      {this.state.userinfo.FirstName +
+                        " " +
+                        this.state.userinfo.LastName}</Card.Title>
+                    <a>Nickname:{this.state.userinfo.Nickname}</a>
+                    <a>Location:{this.state.userinfo.City}</a>
                     <a>
-                      {this.state.userinfo.state}, {this.state.userinfo.country}
+                      {this.state.userinfo.State}, {this.state.userinfo.Country}
                     </a>
-                    <Link
-                      to={{
-                        pathname: "/menu",
-                        state: { foo: "test@test.com2" },
-                      }}
-                    >
-                      My route3
-                    </Link>
-
+                    {follow}
                     <ListGroup className="list-group-flush">
                       <ListGroupItem>
-                        Phone Number: {this.state.userinfo.Conphone}
+                        Phone Number:{this.state.userinfo.Password}
                       </ListGroupItem>
                       <ListGroupItem>
-                        Email: {this.state.userinfo.Conemail}
+                        Email: {this.state.userinfo.Email}
                       </ListGroupItem>
                     </ListGroup>
                     <a style={{ fontStyle: "italic" }}>
@@ -149,6 +133,7 @@ class Userpage extends Component {
                   <Nav.Item>
                     <Nav.Link eventKey="first">About</Nav.Link>
                   </Nav.Item>
+                  {messageinit1}
                 </Nav>
               </Col>
               <Col sm={9}>
@@ -156,12 +141,13 @@ class Userpage extends Component {
                   <Tab.Pane eventKey="first">
                     <h3 style={{ color: "red" }}>About me</h3>
                     <h4 style={{ color: "black" }}>Find Me in </h4>
-                    <p>{this.state.findmein}</p>
+                    <p>{this.state.userinfo.Findme}</p>
                     <h4 style={{ color: "black" }}>Things I Love </h4>
-                    <p>{this.state.thingsilove}</p>
+                    <p>{this.state.userinfo.ThingsILove}</p>
                     <h4 style={{ color: "black" }}>Yelping Since </h4>
-                    <p>{this.state.yelpingsince}</p>
+                    <p>{this.state.userinfo.AboutMe}</p>
                   </Tab.Pane>
+                  {messageinit2}
                 </Tab.Content>
               </Col>
             </Row>
@@ -173,4 +159,27 @@ class Userpage extends Component {
     return <>{display}</>;
   }
 }
-export default Userpage;
+//export Home Component
+const mapStateToProps = (state, ownprops) => {
+  console.log(state.LoginReducer.userInfo);
+  const userInfo = state.LoginReducer.userInfo;
+  const profileInfo = state.profilereducer.profileinfo;
+  return {
+    userInfo: userInfo,
+    profileInfo: profileInfo,
+  };
+};
+
+const mapDispatchToProps = (dispatch) => {
+  return {
+    profile: (payload) => {
+      dispatch({
+        type: profile,
+        payload,
+      });
+    },
+  };
+};
+
+//export Login Component
+export default connect(mapStateToProps, mapDispatchToProps)(Userpage);

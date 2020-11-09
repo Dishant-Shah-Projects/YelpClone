@@ -91,7 +91,7 @@ class Setups extends Component {
     axios.defaults.headers.common["authorization"] = localStorage.getItem(
       "token"
     );
-    axios.post(backendURL+"/restaurant/eventsPost", data).then((response) => {
+    axios.post(backendURL + "/restaurant/eventsPost", data).then((response) => {
       console.log("Status Code : ", response.status);
       if (response.status === 200) {
         this.setState({

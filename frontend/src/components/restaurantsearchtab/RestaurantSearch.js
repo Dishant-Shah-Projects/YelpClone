@@ -7,13 +7,12 @@ import { Map, GoogleApiWrapper, Marker } from "google-maps-react";
 export class MapContainer extends Component {
   constructor(props) {
     super(props);
-
     this.state = {
       current: { lat: props.location.lat, lng: props.location.lng },
       stores: props.rest,
     };
-    console.log(this.state.store);
-    console.log(props);
+  
+    
   }
 
   displayMarkers = () => {
@@ -24,8 +23,8 @@ export class MapContainer extends Component {
             key={index}
             id={index}
             position={{
-              lat: store.Restaurantlat,
-              lng: store.Restaurantlng,
+              lat: store.Lat,
+              lng: store.Long,
             }}
             onClick={() => console.log("You clicked me!")}
           />

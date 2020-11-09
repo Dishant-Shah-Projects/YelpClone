@@ -9,6 +9,8 @@ import { Redirect } from "react-router";
 import { Link } from "react-router-dom";
 import MapContainer from "./RestaurantSearch";
 import { backendURL } from "../../config";
+import { connect } from "react-redux";
+import { restaurantsearch } from "../../Redux/constants/actiontypes";
 import {
   Container,
   Jumbotron,
@@ -18,11 +20,11 @@ import {
   ListGroup,
 } from "react-bootstrap";
 class RestaurantMaps extends Component {
-  constructor(props) {
-    super(props);
+  constructor(ownprops) {
+    super(ownprops);
     this.state = {
       locat: null,
-      restaurants: [],
+      restaurants: ownprops.restaurants,
       searchcolumn: "",
       searchterm: "",
     };
@@ -39,24 +41,26 @@ class RestaurantMaps extends Component {
       };
       this.setState({ locat });
     });
-    const data = {
-      searchcolumn: this.state.searchcolumn,
-      searchterm: this.state.searchterm,
-    };
-    axios.defaults.headers.common["authorization"] = localStorage.getItem(
-      "token"
-    );
-    axios
-      .post(backendURL+"/restaurants", data)
-
-      .then((response) => {
-        //update the state with the response data
-        console.log(response.data);
-        this.setState({
-          restaurants: response.data,
-          loaded: true,
+    if (this.state.restaurants === []) {
+      const data = {
+        term: this.state.searchcolumn,
+        value: this.state.searchterm,
+      };
+      axios.defaults.headers.common["authorization"] = localStorage.getItem(
+        "token"
+      );
+      axios
+        .post(backendURL + "/customer/restaurantSearch", data)
+        .then((response) => {
+          //update the state with the response data
+          console.log(response.data);
+          this.props.restaurantsearch(response.data);
+          this.setState({
+            restaurants: response.data,
+            loaded: true,
+          });
         });
-      });
+    }
   }
   updateterm = (e) => {
     this.setState({
@@ -70,15 +74,19 @@ class RestaurantMaps extends Component {
   };
   handleupsearch = () => {
     var data = {
-      searchterm: this.state.searchterm,
-      searchcolumn: this.state.searchcolumn,
+      value: this.state.searchterm,
+      term: this.state.searchcolumn,
     };
+    axios.defaults.headers.common["authorization"] = localStorage.getItem(
+      "token"
+    );
     axios
-      .post("http://localhost:3001/restaurantsearch", data)
+      .post(backendURL + "/customer/restaurantSearch", data)
 
       .then((response) => {
         //update the state with the response data
         console.log(response.data);
+        this.props.restaurantsearch(response.data);
         this.setState({
           restaurants: response.data,
           loaded: true,
@@ -93,60 +101,76 @@ class RestaurantMaps extends Component {
     console.log(this.state.restaurants);
     var eventsdisp = null;
     eventsdisp = this.state.restaurants.map((eve) => {
-      console.log(eve.RestaurantEmail);
       return (
         <>
           <ListGroup.Item>
             <Link
               to={{
                 pathname: "/restaurant",
-                state: { foo: eve.RestaurantEmail },
+                state: { foo: eve.restaurantID },
               }}
             >
-              {eve.RestaurantName}
+              {eve.Name}
             </Link>
           </ListGroup.Item>
         </>
       );
     });
-    if (cookie.load("customer")) {
-      return (
-        <Container>
-          <Jumbotron>
-            <Form inline justify-content-center>
-              <center>
-                <h2>Restaurant Search Bar</h2>
-                <FormControl
-                  type="text"
-                  placeholder="Search"
-                  className="mr-sm-2"
-                  onChange={this.updateterm}
-                />
-                <Form.Control as="select" required onChange={this.updatecat}>
-                  <option value="cuisines">Cusine</option>
-                  <option value="location">Location</option>
-                  <option value="mode of delivery">Mode of Delivery</option>
-                  <option value="DishName">Dish</option>
-                </Form.Control>
-                <Button onClick={this.handleupsearch} variant="outline-success">
-                  Search
-                </Button>
-              </center>
-            </Form>
-          </Jumbotron>
-          <h1> Restaurants Near Me</h1>
-          <ListGroup>{eventsdisp}</ListGroup>
-          <MapContainer
-            location={this.state.locat}
-            rest={this.state.restaurants}
-          />
-        </Container>
-      );
-    }  else {
-      return <Redirect to="/login" />;
-    }
+    return (
+      <Container>
+        <Jumbotron>
+          <Form inline justify-content-center>
+            <center>
+              <h2>Restaurant Search Bar</h2>
+              <FormControl
+                type="text"
+                placeholder="Search"
+                className="mr-sm-2"
+                onChange={this.updateterm}
+              />
+              <Form.Control as="select" required onChange={this.updatecat}>
+                <option value="cuisines">Cusine</option>
+                <option value="location">Location</option>
+                <option value="mode of delivery">Mode of Delivery</option>
+                <option value="DishName">Dish</option>
+              </Form.Control>
+              <Button onClick={this.handleupsearch} variant="outline-success">
+                Search
+              </Button>
+            </center>
+          </Form>
+        </Jumbotron>
+        <h1> Restaurants Near Me</h1>
+        <ListGroup>{eventsdisp}</ListGroup>
+        <MapContainer
+          location={this.state.locat}
+          rest={this.state.restaurants}
+        />
+      </Container>
+    );
   }
 }
 
 //export Home Component
-export default RestaurantMaps;
+//export Home Component
+const mapStateToProps = (state, ownprops) => {
+  console.log(state.LoginReducer.userInfo);
+  const restaurants = state.restaurantSearchReducer.restaurants;
+  return {
+    restaurants: restaurants,
+  };
+};
+
+const mapDispatchToProps = (dispatch) => {
+  return {
+    restaurantsearch: (payload) => {
+      dispatch({
+        type: restaurantsearch,
+        payload,
+      });
+    },
+  };
+};
+
+//export Login Component
+export default connect(mapStateToProps, mapDispatchToProps)(RestaurantMaps);

@@ -1,11 +1,13 @@
 import React, { Component } from "react";
 import cookie from "react-cookies";
-import { Button, Form, Container, FormGroup } from "react-bootstrap";
+import { Button, Form, Container, FormGroup,Pagination } from "react-bootstrap";
 import "bootstrap/dist/css/bootstrap.min.css";
 import axios from "axios";
 import Menuitem from "./menuItem";
 import Cart from "./cart.js";
 import { backendURL } from "../../config";
+import { connect } from "react-redux";
+import { profile } from "../../Redux/constants/actiontypes";
 class Menu extends Component {
   constructor(props) {
     super(props);
@@ -14,29 +16,77 @@ class Menu extends Component {
       Restmenu: [],
       Cart: [],
       OrderType: "Delivery",
-      total: 0,
-      useremail: cookie.load("user"),
+      useremail: props.userInfo,
       OrderSubmitted: false,
+      PageNo:0,
+      Pages:0,
     };
     this.addtocarr = this.addtocarr.bind(this);
     this.submitorder = this.submitorder.bind(this);
+    this.pageup = this.pageup.bind(this);
+    this.pagedown = this.pagedown.bind(this);
     this.DeliveryTypeChange = this.DeliveryTypeChange.bind(this);
   }
   componentDidMount() {
     const data = {
-      Restaurant: this.state.Restaurant,
+      restaurantID: this.state.Restaurant.restaurantID,
+      PageNo:0,
     };
     axios.defaults.headers.common["authorization"] = localStorage.getItem(
       "token"
     );
     axios
-      .post(backendURL+"/menu", data)
+      .post(backendURL + "/customer/restaurantMenu", data)
 
       .then((response) => {
         //update the state with the response data
         console.log(response.data);
         this.setState({
-          Restmenu: response.data,
+          Restmenu: response.data[1],
+          Pages:response.data[0],
+
+        });
+      });
+  }
+  pageup=()=> {
+    const data = {
+      restaurantID: this.state.Restaurant,
+      PageNo:this.state.PageNo+1,
+    };
+    axios.defaults.headers.common["authorization"] = localStorage.getItem(
+      "token"
+    );
+    axios
+      .post(backendURL + "/customer/restaurantMenu", data)
+
+      .then((response) => {
+        //update the state with the response data
+        console.log(response.data);
+        this.setState({
+          Restmenu: response.data[1],
+          Pages:response.data[0],
+          PageNo:this.state.PageNo+1,
+        });
+      });
+  }
+  pagedown=()=> {
+    const data = {
+      restaurantID: this.state.Restaurant,
+      PageNo:this.state.PageNo-1,
+    };
+    axios.defaults.headers.common["authorization"] = localStorage.getItem(
+      "token"
+    );
+    axios
+      .post(backendURL + "/customer/restaurantMenu", data)
+
+      .then((response) => {
+        //update the state with the response data
+        console.log(response.data);
+        this.setState({
+          Restmenu: response.data[1],
+          Pages:response.data[0],
+          PageNo:this.state.PageNo-1,
         });
       });
   }
@@ -61,14 +111,16 @@ class Menu extends Component {
     event.preventDefault();
     console.log(this.state.OrderType);
     const data = {
-      Restaurant: this.state.Restaurant,
-      Cart: this.state.Cart,
-      total: this.state.total,
+      restaurantID:this.state.Restaurant.restaurantID,
+      restaurantName:this.state.Restaurant.Name,
+      customerID:this.state.useremail.customerID,
+      customerName:this.state.useremail.FirstName+" "+this.state.useremail.LastName,
+      Items: this.state.Cart,
       OrderType: this.state.OrderType,
-      useremail: this.state.useremail,
     };
+    console.log(data);
     axios
-      .post("http://localhost:3001/addorder", data)
+      .post(backendURL+"/customer/restaurantaddOrder", data)
 
       .then((response) => {
         //update the state with the response data
@@ -88,6 +140,8 @@ class Menu extends Component {
         </React.Fragment>
       );
     });
+    let menus =null;
+
     if (this.state.OrderSubmitted) {
       return (
         <>
@@ -101,6 +155,13 @@ class Menu extends Component {
     return (
       <Container>
         <h1> Menu</h1>
+
+        <Pagination>
+        <Pagination.Prev onClick={this.pagedown} />
+        <Pagination.Item disabled>{this.state.PageNo+"/"+this.state.Pages}</Pagination.Item>
+
+        <Pagination.Next onClick={this.pageup} />
+        </Pagination>
         {appitizers}
 
         <h1>Cart</h1>
@@ -130,4 +191,24 @@ class Menu extends Component {
     );
   }
 }
-export default Menu;
+const mapStateToProps = (state, ownprops) => {
+  console.log(state.LoginReducer.userInfo);
+  const userInfo = state.profilereducer.profileinfo;
+  return {
+    userInfo: userInfo,
+  };
+};
+
+const mapDispatchToProps = (dispatch) => {
+  return {
+    profile: (payload) => {
+      dispatch({
+        type: profile,
+        payload,
+      });
+    },
+  };
+};
+
+//export Login Component
+export default connect(mapStateToProps, mapDispatchToProps)(Menu);

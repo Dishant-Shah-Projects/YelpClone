@@ -3,6 +3,7 @@ import axios from "axios";
 import { profile } from "../../Redux/constants/actiontypes";
 import download from "./download.png";
 import { backendURL } from "../../config";
+import { Link } from "react-router-dom";
 import {
   Container,
   Card,
@@ -47,7 +48,7 @@ class CustomerHome extends Component {
         //update the state with the response data
         console.log(response);
         console.log(response.status);
-        let userInfo =response.data;
+        let userInfo = response.data;
         this.props.profile(userInfo);
         this.setState({
           userinfo: response.data,
@@ -69,19 +70,25 @@ class CustomerHome extends Component {
               <Row>
                 <Col md={3}>
                   <Image
-                    src={this.state.userimage}
+                   src={backendURL+"/images/"+this.state.iteminfo.ProfilePicURL}
                     style={{ width: 150, height: 150 }}
                   />
                 </Col>
                 <Col md={9}>
                   <Card>
-                    <Card.Title>{this.state.userinfo.FirstName + " "+this.state.userinfo.LastName}</Card.Title>
+                    <Card.Title>
+                      {this.state.userinfo.FirstName +
+                        " " +
+                        this.state.userinfo.LastName}
+                    </Card.Title>
                     <a>Nickname:{this.state.userinfo.Nickname}</a>
                     <a>Location:{this.state.userinfo.City}</a>
                     <a>
                       {this.state.userinfo.State}, {this.state.userinfo.Country}
                     </a>
-
+                    <Link to={{ pathname: "/user", state: { foo: 2 } }}>
+    My route2
+  </Link>
                     <ListGroup className="list-group-flush">
                       <ListGroupItem>
                         Phone Number: {this.state.userinfo.Password}

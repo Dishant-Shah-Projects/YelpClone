@@ -138,6 +138,7 @@ async function handle_request(msg, callback) {
         const eventslist = await order.find();
         const orderID = 1 + eventslist.length;
         // eslint-disable-next-line new-cap
+        console.log(msg.body);
         const newevent = new order({
           orderID, ...msg.body, OrderDateTime: Date.now(), OrderStatus: 'Order Received',
         });
@@ -400,21 +401,25 @@ async function handle_request(msg, callback) {
       try {
         const {
           PageNo, term, value, CustomerID,
-        } = msg.query;
+        } = msg.body;
+        console.log(msg.body);
         let user = null;
         if (term === 'FirstName') {
-          user = await Customer.find({ FirstName: value }).select('-Password');
+          user = await Customer.find({ FirstName: value }).select('customerID FirstName LastName');
         } else if (term === 'Nickname') {
-          user = await Customer.find({ Nickname: value }).select('-Password');
+          user = await Customer.find({ Nickname: value }).select('customerID FirstName LastName');
         } else if (term === 'LastName') {
-          user = await Customer.find({ LastName: value }).select('-Password');
+          user = await Customer.find({ LastName: value }).select('customerID FirstName LastName');
         } else if (term === 'Following') {
-          const user2 = await Customer.findOne({ CustomerID }).select('-Password');
+          const user2 = await Customer.findOne({ CustomerID }).select('customerID FirstName LastName');
           user = user2.PeopleFollowed;
         } else if (term === 'location') {
           const user2 = await Customer.findOne({ CustomerID }).select('-Password');
-          const user3 = await Customer.find({ State: user2.State }).select('-Password');
+          const user3 = await Customer.find({ State: user2.State }).select('customerID FirstName LastName');
           user = user3;
+        } else {
+          const user2 = await Customer.find({ }).select('customerID FirstName LastName');
+          user = user2;
         }
         if (user) {
           const resultarray = [];
@@ -429,7 +434,8 @@ async function handle_request(msg, callback) {
           res.end = 'Network Error';
           callback(null, res);
         }
-      } catch {
+      } catch (err) {
+        console.log(err);
         res.status = 500;
         res.end = 'Network Error';
         callback(null, res);
@@ -475,16 +481,18 @@ async function handle_request(msg, callback) {
     case 'restaurantSearch': {
       const res = {};
       try {
-        const { term, value } = msg.query;
+        const { term, value } = msg.body;
         let user = null;
         if (term === 'Menu') {
-          user = await Restaurant.find({ Menu: { DishName: value } }).select('-Password');
+          user = await Restaurant.find({ Menu: { DishName: value } }).select('restaurantID Name Lat Long');
         } else if (term === 'Cusine') {
-          user = await Restaurant.find({ Cusine: value }).select('-Password');
+          user = await Restaurant.find({ Cusine: value }).select('restaurantID Name Lat Long');
         } else if (term === 'Console') {
-          user = await Restaurant.find({ Location: value }).select('-Password');
+          user = await Restaurant.find({ Location: value }).select('restaurantID Name Lat Long');
+        } else if (term === 'pickmethod') {
+          user = await Restaurant.find({ PickMethod: value }).select('restaurantID Name Lat Long');
         } else {
-          user = await Restaurant.find({ PickMethod: value }).select('-Password');
+          user = await Restaurant.find({ }).select('restaurantID Name Lat Long');
         }
         if (user) {
           res.status = 200;
@@ -509,7 +517,7 @@ async function handle_request(msg, callback) {
           customerID,
         } = msg.body;
         console.log(msg.body);
-        messages.find(customerID, (err, results) => {
+        messages.find({ customerID }, (err, results) => {
           if (err) {
             res.status = 500;
             res.end = 'Network Error';
@@ -533,57 +541,31 @@ async function handle_request(msg, callback) {
         const {
           restaurantID,
           customerID,
-          restaurantName,
-          customerName,
           Messager,
           Message,
         } = msg.body;
-        const conversation = await messages.find({ restaurantID, customerID });
-        if (conversation) {
-          messages.findOneAndUpdate(
-            { restaurantID, customerID },
-            {
-              $push: {
-                Messages: {
-                  Messager, Message,
-                },
+
+        messages.findOneAndUpdate(
+          { restaurantID, customerID },
+          {
+            $push: {
+              Messages: {
+                Messager, Message,
               },
             },
-            { safe: true, upsert: true, new: true }, (err, results) => {
-              if (err) {
-                res.status = 500;
-                res.end = 'Network Error';
-                callback(null, res);
-              } else {
-                res.status = 200;
-                res.end = JSON.stringify(results);
-                callback(null, res);
-              }
-            },
-          );
-        } else {
-          const mes = new messages({
-            restaurantID,
-            customerID,
-            restaurantName,
-            customerName,
-            Date: Date.now(),
-            Messages: [{ Messager, Message }],
-          });
-          mes.save(
-            (err, model) => {
-              if (err) {
-                res.status = 500;
-                res.end = 'Network Error';
-                callback(null, res);
-              } else {
-                res.status = 200;
-                res.end = 'OutputSaved';
-                callback(null, res);
-              }
-            },
-          );
-        }
+          },
+          { safe: true, upsert: true, new: true }, (err, results) => {
+            if (err) {
+              res.status = 500;
+              res.end = 'Network Error';
+              callback(null, res);
+            } else {
+              res.status = 200;
+              res.end = JSON.stringify(results);
+              callback(null, res);
+            }
+          },
+        );
       } catch {
         res.status = 500;
         res.end = 'Network Error';

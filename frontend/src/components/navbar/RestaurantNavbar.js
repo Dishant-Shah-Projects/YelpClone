@@ -64,6 +64,9 @@ class Navbar3 extends Component {
               <Nav.Link>
                 <Link to="/events">Events</Link>
               </Nav.Link>
+              <Nav.Link>
+                <Link to="/messages">Messages</Link>
+              </Nav.Link>
             </Nav>
             {navLogin}
           </Navbar.Collapse>

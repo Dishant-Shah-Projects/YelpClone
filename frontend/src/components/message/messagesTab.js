@@ -1,34 +1,34 @@
 import React, { Component } from "react";
 
 import "bootstrap/dist/css/bootstrap.min.css";
-import customerMessage from "./customerMessage";
-import restaurantMessage from "./restaurantMessage";
 import { Redirect } from "react-router";
 import Navbar2 from "../navbar/UserNavbar";
-import Navbar3 from "../navbar/RestaurantNavbar"
+import Navbar3 from "../navbar/RestaurantNavbar";
+import CustomerMessage from "./customerMessage";
+import RestaurantMessage from './restaurantMessage';
 class messageTab extends Component {
   render() {
     //iterate over books to create a table row
 
     console.log(localStorage.getItem("userrole"));
     if (localStorage.getItem("userrole") === "Customer") {
-      return( <>
-      <Navbar2></Navbar2>
-      <customerMessage></customerMessage>
-        </>
-        );
+      console.log("Apple");
+      return (
+        
+          <CustomerMessage/>
+        
+      );
     } else if (localStorage.getItem("userrole") === "Restaurant") {
-      return( <>
-        <Navbar3></Navbar3>
-        <restaurantMessage></restaurantMessage>
-          </>
-          );
+      return (
+        <>
+          <Navbar3></Navbar3>
+          <RestaurantMessage></RestaurantMessage>
+        </>
+      );
     } else {
       return <Redirect to="/login" />;
     }
-
   }
-  
 }
 
 //export Home Component

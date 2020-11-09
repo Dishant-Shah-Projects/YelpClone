@@ -9,14 +9,16 @@ import { Form, Row, Button } from "react-bootstrap";
 import { backendURL } from "../../config";
 import { connect } from "react-redux";
 import { profile } from "../../Redux/constants/actiontypes";
-class RatingReview extends Component {
+class MessageForm extends Component {
   constructor(ownprops) {
     super(ownprops);
     this.state = {
       rating: null,
-      customer: ownprops.userInfo,
-      restaurant: ownprops.restaurantemail,
+      user: ownprops.userInfo,
+      customer: ownprops.customer,
     };
+    console.log(this.state.user);
+    console.log(this.state.customer);
     this.ratingChangeHandler = this.ratingChangeHandler.bind(this);
     this.reviewChangeHandler = this.reviewChangeHandler.bind(this);
     this.submitreview = this.submitreview.bind(this);
@@ -33,37 +35,46 @@ class RatingReview extends Component {
   };
   submitreview = () => {
     const data = {
-      Rating: this.state.rating,
-      Review: this.state.review,
-      customerID: this.state.customer.customerID,
-      restaurantID: this.state.restaurant.restaurantID,
+        restaurantID:this.state.user.restaurantID,
+        restaurantName:this.state.user.Name,
+        customerName:this.state.customer.FirstName+" "+this.state.customer.LastName,
+        Messager:"restaurant",
+        Message:this.state.review,
+        customerID:this.state.customer.customerID,
     };
     axios.defaults.headers.common["authorization"] = localStorage.getItem(
       "token"
     );
+    console.log(data);
     axios
-      .post(backendURL + "/customer/restaurantRatingsAdd", data)
+      .post(backendURL + "/restaurant/messageSend", data)
 
       .then((response) => {
         //update the state with the response data
         console.log(response.data);
-        this.setState({
-          rating: "",
-          review: "",
-        });
+        console.log("Status Code : ", response.status);
+        if (response.status === 200) {
+          this.setState({
+            Registered: true,
+          });
+        } else {
+          this.setState({
+            Registered: false,
+          });
+        }
       });
+      return false;
   };
 
   render() {
+      if(this.state.Registered){
+          return( <h2>Please go to the meesage tab to continue conversation</h2>);
+      }
     return (
       <>
         <Form>
           <Form.Group as={Row}>
-            <Form.Label>Rating</Form.Label>
-            <Rating onChange={this.ratingChangeHandler} />
-          </Form.Group>
-          <Form.Group as={Row}>
-            <Form.Label>Review</Form.Label>
+            <Form.Label>Send Message</Form.Label>
             <textarea onChange={this.reviewChangeHandler}></textarea>
           </Form.Group>
           <Form.Group as={Row}>
@@ -95,4 +106,4 @@ const mapDispatchToProps = (dispatch) => {
 };
 
 //export Login Component
-export default connect(mapStateToProps, mapDispatchToProps)(RatingReview);
+export default connect(mapStateToProps, mapDispatchToProps)(MessageForm);

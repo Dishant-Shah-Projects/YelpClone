@@ -9,7 +9,7 @@ class Peopleevent extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      users:props.event
+      users: props.event,
     };
   }
   render() {

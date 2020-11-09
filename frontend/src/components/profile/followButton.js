@@ -5,25 +5,26 @@ import axios from "axios";
 import { Button, Container } from "react-bootstrap";
 import "bootstrap/dist/css/bootstrap.min.css";
 import { backendURL } from "../../config";
-class Regevent extends Component {
-  constructor(props) {
-    super(props);
+import { connect } from "react-redux";
+import { profile } from "../../Redux/constants/actiontypes";
+class Follow extends Component {
+  constructor(ownprops) {
+    super(ownprops);
     this.state = {
-      UserEmail: props.UserEmail,
-      EventName: props.eventName,
-      name: props.name,
+      info: ownprops.userInfo,
+      ID: ownprops.ID,
+      name: ownprops.name,
       Registered: false,
     };
-    console.log(this.state);
+    console.log(this.state.info);
     this.handleClick = this.handleClick.bind(this);
   }
   componentDidMount() {
-    console.log(this.state.user);
     var found = false;
-    for (var i = 0; i < this.state.EventName.PeopleRegistered.length; i++) {
+    for (var i = 0; i < this.state.info.PeopleFollowed.length; i++) {
       if (
-        this.state.EventName.PeopleRegistered[i].CustomerID ==
-        this.state.UserEmail.ID
+        this.state.info.PeopleFollowed[i].CustomerID ==
+        this.state.ID
       ) {
         found = true;
         break;
@@ -38,12 +39,12 @@ class Regevent extends Component {
 
   handleClick = (e) => {
     const data = {
-      eventID: this.state.EventName.eventID,
-      CustomerID: this.state.UserEmail.ID,
+      followID: this.state.ID,
+      customerID: this.state.info.customerID,
       CustomerName: this.state.name,
     };
     axios
-      .post(backendURL + "/customer/eventsregister", data)
+      .post(backendURL + "/customer/customerFollow", data)
 
       .then((response) => {
         //update the state with the response data
@@ -69,13 +70,13 @@ class Regevent extends Component {
 
       reg = (
         <Button disabled size="sm">
-          Registered!
+          Followed!
         </Button>
       );
     } else {
       reg = (
         <Button onClick={this.handleClick} size="sm">
-          Register
+          Follow
         </Button>
       );
     }
@@ -87,4 +88,25 @@ class Regevent extends Component {
     );
   }
 }
-export default Regevent;
+//export Home Component
+const mapStateToProps = (state, ownprops) => {
+  console.log(state.profilereducer.profileinfo);
+  const userInfo = state.profilereducer.profileinfo;
+  return {
+    userInfo: userInfo,
+  };
+};
+
+const mapDispatchToProps = (dispatch) => {
+  return {
+    profile: (payload) => {
+      dispatch({
+        type: profile,
+        payload,
+      });
+    },
+  };
+};
+
+//export Login Component
+export default connect(mapStateToProps, mapDispatchToProps)(Follow);

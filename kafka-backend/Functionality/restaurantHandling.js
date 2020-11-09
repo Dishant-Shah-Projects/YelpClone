@@ -16,17 +16,16 @@ async function handle_request(msg, callback) {
       const res = {};
       try {
         const { customerID } = msg.query;
-        Restaurant.findOne({ customerID }, (err, results) => {
-          if (err) {
-            res.status = 500;
-            res.end = 'Network Error';
-            callback(null, res);
-          } else {
-            res.status = 200;
-            res.end = JSON.stringify(results);
-            callback(null, res);
-          }
-        });
+        const user = await Restaurant.findOne({ customerID }).select('-Password -Menu');
+        if (user) {
+          res.status = 200;
+          res.end = JSON.stringify(user);
+          callback(null, res);
+        } else {
+          res.status = 500;
+          res.end = 'Network Error';
+          callback(null, res);
+        }
       } catch {
         res.status = 500;
         res.end = 'Network Error';
@@ -75,10 +74,10 @@ async function handle_request(msg, callback) {
       const res = {};
       try {
         const {
-          restaurantID, PhoneNo, Cusine, Description, PickMethod, ContactEmail,
+          restaurantID, PhoneNo, Cusine, Description, PickMethod, ContactEmail, Hours,
         } = msg.body;
         Restaurant.findOneAndUpdate({ restaurantID }, {
-          PhoneNo, Cusine, Description, PickMethod, ContactEmail,
+          PhoneNo, Cusine, Description, PickMethod, ContactEmail, Hours,
         }, (err, results) => {
           if (err) {
             res.status = 500;
@@ -134,7 +133,7 @@ async function handle_request(msg, callback) {
           Messager,
           Message,
         } = msg.body;
-        const conversation = await messages.find({ restaurantID, customerID });
+        const conversation = await messages.findOne({ restaurantID, customerID });
         if (conversation) {
           messages.findOneAndUpdate(
             { restaurantID, customerID },
@@ -203,9 +202,9 @@ async function handle_request(msg, callback) {
               callback(null, res);
             } else if (model) {
               const resultarray = [];
-              const pages = Math.ceil(model.Menu.length / 5);
+              const pages = Math.ceil(model.Menu.length / 3);
               resultarray.push(pages);
-              resultarray.push(model.Menu.slice(PageNo * 5, PageNo * 5 + 5));
+              resultarray.push(model.Menu.slice(PageNo * 3, PageNo * 3 + 3));
               res.status = 200;
               res.end = JSON.stringify(resultarray);
               callback(null, res);
@@ -314,9 +313,9 @@ async function handle_request(msg, callback) {
         } = msg.body;
         let eventlist = null;
         if (Filtered) {
-          eventlist = await events.find({ restaurantID, OrderStatus }).sort({ Date: 'ascending' });
+          eventlist = await order.find({ restaurantID, OrderStatus }).sort({ Date: 'ascending' });
         } else {
-          eventlist = await events.find({ restaurantID }).sort({ Date: 'ascending' });
+          eventlist = await order.find({ restaurantID }).sort({ Date: 'ascending' });
         }
         if (eventlist) {
           const resultarray = [];

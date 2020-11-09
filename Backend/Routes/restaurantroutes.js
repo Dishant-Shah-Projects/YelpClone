@@ -123,6 +123,7 @@ Router.get('/review', checkAuth, async (req, res) => {
 });
 // orders view pagination
 Router.post('/orders', checkAuth, async (req, res) => {
+  console.log(req.body);
   const data = {
     api: 'getOrders',
     body: req.body,
@@ -145,7 +146,7 @@ Router.post('/orders', checkAuth, async (req, res) => {
 Router.post('/orderUpdate', checkAuth, async (req, res) => {
   const data = {
     api: 'orderUpdate',
-    query: req.query,
+    body: req.body,
   };
   kafka.make_request('restaurant444', data, (err, results) => {
     console.log('in result');

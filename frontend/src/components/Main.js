@@ -5,7 +5,7 @@ import Navbar2 from "./navbar/UserNavbar";
 import Home from "./home/Home";
 import RestaurantMaps from "./restaurantsearchtab/Restaurants";
 import Events from "./events/eventsPage";
-
+import messageTab from "./message/messagesTab";
 // import Delete from './Delete/Delete';
 // import Create from './Create/Create';
 
@@ -16,6 +16,7 @@ import Menu from "./restaurant/menu";
 import OrdersPage from "./orders/OrdersPage";
 // import Navbar3 from "./navbar/RestaurantNavbar";
 import RestaurantSignup from "./signup/signup";
+import userSearchTab from "./userSearchTab/userSearchTab";
 //Create a Main Component
 class Main extends Component {
   render() {
@@ -36,6 +37,8 @@ class Main extends Component {
           <Route path="/restaurant" exact component={RestaurantPage} />
           <Route path="/menu" exact component={Menu} />
           <Route path="/restaurantsearch" component={RestaurantMaps} />
+          <Route path="/customerSearch" component={userSearchTab} />
+          <Route path="/messages" component={messageTab} />
         </div>
       </React.Fragment>
     );
