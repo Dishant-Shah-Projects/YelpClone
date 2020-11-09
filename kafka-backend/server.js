@@ -15,7 +15,7 @@ const { mongoDB } = require('./config');
 const options = {
   useNewUrlParser: true,
   useUnifiedTopology: true,
-  poolSize: 500,
+  poolSize: 30,
   bufferMaxEntries: 0,
   useFindAndModify: false,
 };

@@ -7,9 +7,8 @@ const session = require('express-session');
 const cookieParser = require('cookie-parser');
 
 const bodyParser = require('body-parser');
-const mongoose = require('mongoose');
 const cors = require('cors');
-const { frontendURL, mongoDB } = require('./config');
+const { frontendURL } = require('./config');
 const commonPart = require('./Routes/generalroutes');
 const restaurantRoute = require('./Routes/restaurantroutes');
 const customerRoute = require('./Routes/customerroutes');
