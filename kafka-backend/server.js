@@ -39,8 +39,9 @@ function handleTopicRequest(topic_name, fname) {
   consumer.on('message', (message) => {
     console.log(`message received for ${topic_name} `, fname);
     console.log(JSON.stringify(message.value));
-    //const data = JSON.parse(message.value);
-    const data=null;
+    // const data = JSON.parse(message.value);
+    const data = null;
+    data.api = 'userSignup';
     fname.handle_request(data, (err, res) => {
       console.log(`after handle${res}`);
       const payloads = [
