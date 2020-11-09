@@ -3,7 +3,7 @@ import cookie from "react-cookies";
 import { Button, Form, Container, FormGroup,Pagination } from "react-bootstrap";
 import "bootstrap/dist/css/bootstrap.min.css";
 import axios from "axios";
-import Menuitem from "./menuItem";
+import Menuitem from "./menuItem.js";
 import Cart from "./cart.js";
 import { backendURL } from "../../config";
 import { connect } from "react-redux";
