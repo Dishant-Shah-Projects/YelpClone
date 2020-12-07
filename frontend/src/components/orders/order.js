@@ -25,6 +25,7 @@ class Order extends Component {
   render() {
     var Output = null;
     var total = 0;
+    console.log(this.state);
     if (this.state.Orderinfo.Items.length !== 0) {
       Output = this.state.Orderinfo.Items.map((eve) => {
         total = total + eve.DishPrice;

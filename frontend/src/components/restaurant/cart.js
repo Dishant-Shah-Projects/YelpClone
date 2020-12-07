@@ -26,7 +26,7 @@ class Cart extends Component {
     var Output = null;
     var Total = 0;
     Output = this.state.Cart.map((eve) => {
-      Total = Total + eve[2];
+      Total = Total + eve.DishPrice;
       return (
         <React.Fragment>
           <tr>

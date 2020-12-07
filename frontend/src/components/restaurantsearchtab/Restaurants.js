@@ -24,7 +24,7 @@ class RestaurantMaps extends Component {
     super(ownprops);
     this.state = {
       locat: null,
-      restaurants: ownprops.restaurants,
+      restaurants: [ownprops.restaurants],
       searchcolumn: "",
       searchterm: "",
     };

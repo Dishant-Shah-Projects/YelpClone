@@ -128,12 +128,10 @@ class UserOrders extends Component {
     if (this.state.Sorted) {
       this.setState({
         Sorted: false,
-        PageNo: 0,
       });
     } else {
       this.setState({
-        Sorted: false,
-        PageNo: 0,
+        Sorted: true,
       });
     }
     console.log(this.state.user);
