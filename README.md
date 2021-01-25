@@ -1,7 +1,7 @@
 # CMPE273Lab2Yelpclone
 
+This is a prototype for a Yelp inspired application built using the MERN stack that uses KAFKA, PassportJS and JWT Web Token.  
 
-This is the Repository for a MERN STACK application that uses KAFKA, PassportJS and JWT Web Token.  
 The Following Steps need to be taken to deploy the following application:
 
 - deploy zookeeper and kafka on the local machine
